@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "117523481276",
+    "project_id": "ssq-chq",
+    "storage_bucket": "ssq-chq.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117523481276:android:a288bdd92c8a28870246b9",
+        "android_client_info": {
+          "package_name": "com.example.cheque_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "117523481276-svgskrmq093dvqqrd1trmn7mrrp92e3d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdBOA-123xDmClgwQWphaX7klXpuWn0Vw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "117523481276-svgskrmq093dvqqrd1trmn7mrrp92e3d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
