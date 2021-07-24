@@ -7,17 +7,6 @@ import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-extension CapExtension on String {
-  String get inCaps =>
-      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => this
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.inCaps)
-      .join(" ");
-}
-
 // ignore: must_be_immutable
 class BuildPaymentList extends StatelessWidget {
   final FirebaseServices _firebaseServices = FirebaseServices();
@@ -48,20 +37,17 @@ class BuildPaymentList extends StatelessWidget {
     String _pending = isPending ? 'Pending' : '';
     String _bounced = isBounced ? 'Bounced' : '';
 
-    return StreamProvider<List<PaymentModel>>.value(
-      value: _firebaseServices.getPartyPayments(partyId: party.id),
-      initialData: [],
-      builder: (context, snapshots) {
-        _cheque = Provider.of<List<PaymentModel>>(context);
-        _cheque = _cheque
-            .where((cheque) =>
-                cheque.paymentNumber.startsWith(chequeSearch) &&
-                (cheque.status == _approved ||
-                    cheque.status == _pending ||
-                    cheque.status == _bounced))
-            .toList();
-        if (_cheque.isNotEmpty) {
-          return ListView.builder(
+    _cheque = Provider.of<List<PaymentModel>>(context);
+    _cheque = _cheque
+        .where((cheque) =>
+            cheque.paymentNumber.startsWith(chequeSearch) &&
+            (cheque.status == _approved ||
+                cheque.status == _pending ||
+                cheque.status == _bounced))
+        .toList();
+
+    return _cheque.isNotEmpty
+        ? ListView.builder(
             shrinkWrap: true,
             itemCount: _cheque.length,
             itemBuilder: (context, index) {
@@ -161,19 +147,11 @@ class BuildPaymentList extends StatelessWidget {
               }
               return Container();
             },
-          );
-        }
-        if (_cheque.isEmpty) {
-          return Text(
+          )
+        : Text(
             'No cheques',
             style: kLabelStyle,
+            overflow: TextOverflow.ellipsis,
           );
-        }
-        return Text(
-          'No cheques',
-          style: kLabelStyle,
-        );
-      },
-    );
   }
 }

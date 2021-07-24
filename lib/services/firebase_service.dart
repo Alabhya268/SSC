@@ -80,10 +80,15 @@ class FirebaseServices {
         );
   }
 
-  Stream<PaymentModel> getPaymentDetail(String chequeId) => paymentsRef
-      .doc(chequeId)
+  Stream<PaymentModel> getPaymentDetail(String paymentId) => paymentsRef
+      .doc(paymentId)
       .snapshots()
       .map((cheque) => PaymentModel.fromData(cheque as Map<String, dynamic>));
+
+  Stream<PartiesModel> getPartyDetail(String partyId) => partiesRef
+      .doc(partyId)
+      .snapshots()
+      .map((party) => PartiesModel.fromData(party as Map<String, dynamic>));
 
   Stream<List<dynamic>> get getProducts =>
       productListRef.snapshots().map((value) => value.docs

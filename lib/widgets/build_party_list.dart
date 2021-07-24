@@ -7,17 +7,6 @@ import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-extension CapExtension on String {
-  String get inCaps =>
-      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => this
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.inCaps)
-      .join(" ");
-}
-
 // ignore: must_be_immutable
 class BuildPartyList extends StatelessWidget {
   final FirebaseServices _firebaseServices = FirebaseServices();
@@ -72,9 +61,9 @@ class BuildPartyList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PartyDetail(
-                          party: _parties[index],
-                          role: _userModel.role,
+                        builder: (context) => PartyDetailScreen(
+                          partiesModel: _parties[index],
+                          userModel: _userModel,
                         ),
                       ),
                     );

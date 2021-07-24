@@ -76,4 +76,12 @@ final kTextStyleRegularSubtitle = TextStyle(
   fontSize: 15.0,
 );
 
+final kButtonStyle = ElevatedButton.styleFrom(
+  padding: EdgeInsets.all(15.0),
+  elevation: 5.0,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(30.0),
+  ),
+);
+
 final kRegularIconColor = Colors.black45;

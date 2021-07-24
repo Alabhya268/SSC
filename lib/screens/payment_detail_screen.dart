@@ -8,6 +8,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+extension CapExtension on String {
+  String get inCaps =>
+      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
+  String get allInCaps => this.toUpperCase();
+  String get capitalizeFirstofEach => this
+      .replaceAll(RegExp(' +'), ' ')
+      .split(" ")
+      .map((str) => str.inCaps)
+      .join(" ");
+}
+
 class PaymentDetailScreen extends StatefulWidget {
   final String role;
   final PartiesModel party;
@@ -57,7 +68,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
               width: 10,
             ),
             Text(
-              'SSC',
+              'SSC CHQ',
               style: kTextStyleRegular,
             ),
           ],
@@ -78,8 +89,8 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
               ),
               child: SingleChildScrollView(
                 child: StreamProvider<PaymentModel>.value(
-                  value: _firebaseServices
-                      .getPaymentDetail(widget.paymentModel.id),
+                  value: _firebaseServices.getPaymentDetail(
+                      paymentId: widget.paymentModel.id),
                   initialData: PaymentModel(
                     partyId: widget.paymentModel.id,
                     name: widget.paymentModel.name,
@@ -96,7 +107,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${widget.party.name}',
+                          '${widget.party.name.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -108,7 +119,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                           height: 10.0,
                         ),
                         Text(
-                          '${widget.party.location}',
+                          '${widget.party.location.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -130,22 +141,22 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                               ),
                               Center(
                                 child: Text(
-                                  'Cheque Details',
+                                  'Payment Details',
                                   style: kTextStyleRegular,
                                 ),
                               ),
-                              // ListTile(
-                              //   title: Text(
-                              //     'Cheque Id',
-                              //     style: kTextStyleRegular,
-                              //     overflow: TextOverflow.ellipsis,
-                              //   ),
-                              //   subtitle: Text(
-                              //     '${widget.cheque.id}',
-                              //     style: kTextStyleRegularSubtitle,
-                              //     overflow: TextOverflow.ellipsis,
-                              //   ),
-                              // ),
+                              ListTile(
+                                title: Text(
+                                  'Payment Id',
+                                  style: kTextStyleRegular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  '${widget.paymentModel.id}',
+                                  style: kTextStyleRegularSubtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                               ListTile(
                                 title: Text(
                                   'Name',
@@ -153,7 +164,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_paymentModel.name}',
+                                  '${_paymentModel.name.capitalizeFirstofEach}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),

@@ -73,13 +73,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.all(15.0),
-          elevation: 5.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-        ),
+        style: kButtonStyle,
         onPressed: !_isLoading
             ? () async {
                 setState(() {
