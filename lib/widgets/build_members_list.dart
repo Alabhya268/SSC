@@ -6,17 +6,6 @@ import 'package:cheque_app/widgets/build_update_user_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-extension CapExtension on String {
-  String get inCaps =>
-      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => this
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.inCaps)
-      .join(" ");
-}
-
 class BuildMembersList extends StatefulWidget {
   final bool approved;
   final bool notApproved;

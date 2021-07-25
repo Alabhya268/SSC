@@ -31,10 +31,16 @@ class _MyAppState extends State<MyApp> {
         StreamProvider<User?>.value(
           value: _firebaseServices.firebaseAuth.userChanges(),
           initialData: null,
+          catchError: (context, snapshot) {
+            return null;
+          },
         ),
         StreamProvider<List<dynamic>>.value(
           value: _firebaseServices.getProducts,
           initialData: [],
+          catchError: (context, snapshot) {
+            return [];
+          },
         ),
       ],
       child: MaterialApp(

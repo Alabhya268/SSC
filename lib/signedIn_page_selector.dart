@@ -8,17 +8,7 @@ import 'screens/email_verification_screen.dart';
 import 'screens/parties_list_screen.dart';
 import 'screens/user_approved_screen.dart';
 import 'utilities/constants.dart';
-
-extension CapExtension on String {
-  String get inCaps =>
-      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => this
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.inCaps)
-      .join(" ");
-}
+import 'utilities/extension.dart';
 
 class SignInPageSelector extends StatefulWidget {
   const SignInPageSelector({Key? key}) : super(key: key);
@@ -35,7 +25,7 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
   Widget screenSignedIn(int screenNumberSignedIn) {
     switch (screenNumberSignedIn) {
       case 0:
-        return PartiesListScreen();
+        return PartiesScreen();
       case 1:
         return MembersListScreen();
       case 2:
@@ -43,7 +33,7 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
       case 3:
         return UserApprovedScreen();
       default:
-        return PartiesListScreen();
+        return PartiesScreen();
     }
   }
 

@@ -7,17 +7,7 @@ import 'package:cheque_app/widgets/build_update_payment_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-extension CapExtension on String {
-  String get inCaps =>
-      this.length > 0 ? '${this[0].toUpperCase()}${this.substring(1)}' : '';
-  String get allInCaps => this.toUpperCase();
-  String get capitalizeFirstofEach => this
-      .replaceAll(RegExp(' +'), ' ')
-      .split(" ")
-      .map((str) => str.inCaps)
-      .join(" ");
-}
+import 'package:cheque_app/utilities/extension.dart';
 
 class PaymentDetailScreen extends StatefulWidget {
   final String role;
@@ -143,18 +133,6 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                                 child: Text(
                                   'Payment Details',
                                   style: kTextStyleRegular,
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Payment Id',
-                                  style: kTextStyleRegular,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                subtitle: Text(
-                                  '${widget.paymentModel.id}',
-                                  style: kTextStyleRegularSubtitle,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               ListTile(

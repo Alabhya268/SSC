@@ -1,3 +1,4 @@
+import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/product_list_model.dart';
@@ -22,13 +23,20 @@ class FirebaseServices {
       FirebaseFirestore.instance.collection("payments");
   final CollectionReference partiesRef =
       FirebaseFirestore.instance.collection("parties");
+  final CollectionReference ordersRef =
+      FirebaseFirestore.instance.collection("orders");
   final CollectionReference productListRef =
       FirebaseFirestore.instance.collection("productList");
 
-  Future<UserModel> getCurrentUserDetails() async {
-    return usersRef.doc(getCurrentUserId()).get().then(
-        (user) => UserModel.fromData(user.data() as Map<String, dynamic>));
-  }
+  Future<int> getCurrentUserOrders() =>
+      usersRef.doc(getCurrentUserId()).get().then((user) {
+        return UserModel.fromData(user.data() as Map<String, dynamic>).orders;
+      });
+
+  Stream<UserModel> getCurrentUserDetails() => usersRef
+      .doc(getCurrentUserId())
+      .snapshots()
+      .map((user) => UserModel.fromData(user.data() as Map<String, dynamic>));
 
   Stream<List<UserModel>> getUsers() {
     UserModel _userModel;
@@ -44,6 +52,22 @@ class FirebaseServices {
         );
   }
 
+  Stream<List<OrdersModel>> getPartyOrders({required String partyId}) {
+    OrdersModel _ordersModel;
+    return ordersRef
+        .where('partyId', isEqualTo: partyId)
+        .orderBy('issueDate', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot<Object?> querySnapshot) =>
+              querySnapshot.docs.map((order) {
+            _ordersModel =
+                OrdersModel.fromData(order.data() as Map<String, dynamic>);
+            return _ordersModel;
+          }).toList(),
+        );
+  }
+
   Stream<List<PaymentModel>> getPartyPayments({required String partyId}) {
     PaymentModel _paymentModel;
     return paymentsRef
@@ -52,10 +76,10 @@ class FirebaseServices {
         .snapshots()
         .map(
           (QuerySnapshot<Object?> querySnapshot) =>
-              querySnapshot.docs.map((cheque) {
+              querySnapshot.docs.map((payment) {
             _paymentModel =
-                PaymentModel.fromData(cheque.data() as Map<String, dynamic>);
-            _paymentModel.id = cheque.id;
+                PaymentModel.fromData(payment.data() as Map<String, dynamic>);
+            _paymentModel.id = payment.id;
             return _paymentModel;
           }).toList(),
         );
@@ -80,15 +104,13 @@ class FirebaseServices {
         );
   }
 
-  Stream<PaymentModel> getPaymentDetail(String paymentId) => paymentsRef
-      .doc(paymentId)
-      .snapshots()
-      .map((cheque) => PaymentModel.fromData(cheque as Map<String, dynamic>));
+  Stream<PaymentModel> getPaymentDetail({required String paymentId}) =>
+      paymentsRef.doc(paymentId).snapshots().map((payment) =>
+          PaymentModel.fromData(payment.data() as Map<String, dynamic>));
 
-  Stream<PartiesModel> getPartyDetail(String partyId) => partiesRef
-      .doc(partyId)
-      .snapshots()
-      .map((party) => PartiesModel.fromData(party as Map<String, dynamic>));
+  Stream<PartiesModel> getPartyDetail({required String partyId}) =>
+      partiesRef.doc(partyId).snapshots().map((party) =>
+          PartiesModel.fromData(party.data() as Map<String, dynamic>));
 
   Stream<List<dynamic>> get getProducts =>
       productListRef.snapshots().map((value) => value.docs
@@ -106,6 +128,16 @@ class FirebaseServices {
       .doc(getCurrentUserId())
       .snapshots()
       .map((DocumentSnapshot<Object?> document) => document['role']);
+
+  Future<void> updateUserOrders({
+    required String uid,
+    required int orders,
+  }) async {
+    usersRef.doc(uid).update({
+      'orders': orders,
+    }).onError((error, stackTrace) => print(
+        ' Error from firebase Service in method updateUserOrders: $error'));
+  }
 
   Future<void> updatePaymentDetails({
     required String chequeId,
@@ -161,14 +193,18 @@ class FirebaseServices {
     return paymentsRef.add(paymentModel.toJson());
   }
 
-  Future<void> deleteFromParty(String id) async {
+  Future addToOrder({required OrdersModel orderModel}) {
+    return ordersRef.add(orderModel.toJson());
+  }
+
+  Future<void> deleteFromParty({required String id}) async {
     partiesRef.doc(id).delete().onError((error, stackTrace) => print(
         ' Error from firebase Service in method deleteFromParty: $error'));
   }
 
-  Future<void> deleteFromCheques(String id) async {
+  Future<void> deleteFromPayment({required String id}) async {
     paymentsRef.doc(id).delete().onError((error, stackTrace) => print(
-        ' Error from firebase Service in method deleteFromCheques: $error'));
+        ' Error from firebase Service in method deleteFromPayment: $error'));
   }
 
   Future<String?> createAccount(

@@ -10,6 +10,7 @@ class UserModel {
   late DateTime registerDate;
   late bool approved;
   late bool canAddParty;
+  late bool canEditOrderStatus;
 
   UserModel({
     required this.name,
@@ -20,6 +21,7 @@ class UserModel {
     this.orders = 0,
     required this.registerDate,
     this.approved = false,
+    this.canEditOrderStatus = false,
   });
 
   UserModel.fromData(Map<String, dynamic> data)
@@ -31,7 +33,8 @@ class UserModel {
         canAddParty = data['canAddParty'] ?? false,
         orders = data['orders'] ?? 0,
         registerDate = (data['registerDate'] as Timestamp).toDate(),
-        approved = data['approved'] ?? false;
+        approved = data['approved'] ?? false,
+        canEditOrderStatus = data['canEditOrderStatus'] ?? false;
 
   Map<String, dynamic> toJson() {
     return {
@@ -44,6 +47,7 @@ class UserModel {
       'orders': orders,
       'registerDate': registerDate,
       'approved': approved,
+      'canEditOrderStatus': canEditOrderStatus,
     };
   }
 }

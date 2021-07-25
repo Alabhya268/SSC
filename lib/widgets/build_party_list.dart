@@ -6,6 +6,7 @@ import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cheque_app/utilities/extension.dart';
 
 // ignore: must_be_immutable
 class BuildPartyList extends StatelessWidget {
@@ -86,8 +87,9 @@ class BuildPartyList extends StatelessWidget {
                             actions: [
                               TextButton(
                                 onPressed: () {
-                                  _firebaseServices
-                                      .deleteFromParty(_parties[index].id);
+                                  _firebaseServices.deleteFromParty(
+                                    id: _parties[index].id,
+                                  );
                                   Navigator.of(context).pop();
                                 },
                                 child: Text(

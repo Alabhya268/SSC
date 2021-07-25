@@ -173,6 +173,5 @@ class _BuildAddPartyState extends State<BuildAddParty> {
         ),
       ],
     );
-    ;
   }
 }

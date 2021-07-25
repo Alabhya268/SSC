@@ -31,7 +31,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return _signedIn
         ? MultiProvider(
             providers: [
-              FutureProvider<UserModel>.value(
+              StreamProvider<UserModel>.value(
                 value: _firebaseServices.getCurrentUserDetails(),
                 initialData: UserModel(
                   name: '',
@@ -40,6 +40,8 @@ class _LandingScreenState extends State<LandingScreen> {
                   products: [],
                   registerDate: DateTime.now(),
                   canAddParty: false,
+                  canEditOrderStatus: false,
+                  orders: 0,
                 ),
               ),
               StreamProvider<bool>.value(

@@ -1,105 +1,69 @@
-import 'package:cheque_app/models/payment_model.dart';
+import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
-import 'package:cheque_app/screens/payment_detail_screen.dart';
-import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class BuildPaymentList extends StatelessWidget {
-  final FirebaseServices _firebaseServices = FirebaseServices();
+class BuildOrderList extends StatelessWidget {
   final MiscFunctions _miscFunctions = MiscFunctions();
 
   final PartiesModel party;
   final String role;
   final bool isApproved;
   final bool isPending;
-  final bool isBounced;
-  String paymentSearch;
 
-  BuildPaymentList({
+  BuildOrderList({
     Key? key,
     this.role = '',
     required this.isApproved,
     required this.isPending,
-    required this.isBounced,
     required this.party,
-    this.paymentSearch = '',
   }) : super(key: key);
 
-  List<PaymentModel> _payment = [];
+  List<OrdersModel> _orders = [];
 
   @override
   Widget build(BuildContext context) {
     String _approved = isApproved ? 'Approved' : '';
     String _pending = isPending ? 'Pending' : '';
-    String _bounced = isBounced ? 'Bounced' : '';
 
-    _payment = Provider.of<List<PaymentModel>>(context);
-    _payment = _payment
-        .where((payment) =>
-            payment.paymentNumber.startsWith(paymentSearch) &&
-            (payment.status == _approved ||
-                payment.status == _pending ||
-                payment.status == _bounced))
-        .toList();
-
-    return _payment.isNotEmpty
+    _orders = Provider.of<List<OrdersModel>>(context);
+    return _orders.isNotEmpty
         ? ListView.builder(
             shrinkWrap: true,
-            itemCount: _payment.length,
+            itemCount: _orders.length,
             itemBuilder: (context, index) {
-              if (_payment[index]
-                  .paymentNumber
-                  .startsWith(paymentSearch)) if (_payment[index].status ==
-                      _approved ||
-                  _payment[index].status == _pending ||
-                  _payment[index].status == _bounced) {
+              if (_orders[index].status == _approved ||
+                  _orders[index].status == _pending) {
+                double _principleAmount =
+                    _orders[index].perUnitAmount * _orders[index].numberOfUnits;
+                double _totalAmount = _orders[index].extraCharges +
+                    _principleAmount +
+                    (_principleAmount * _orders[index].tax);
                 return Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(bottom: 10.0),
                   decoration: kBoxDecorationStyle,
                   child: ListTile(
                     title: Text(
-                      'payment : ${_payment[index].paymentNumber}',
+                      'Amount: $_totalAmount',
                       style: kLabelStyle,
                       overflow: TextOverflow.fade,
                     ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Amount: ${_payment[index].amount}',
-                          style: kLabelStyle,
-                          overflow: TextOverflow.fade,
-                        ),
-                        Text(
-                          'Status: ${_payment[index].status}',
-                          style: kLabelStyle,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                    subtitle: Text(
+                      'Status: ${_orders[index].status}',
+                      style: kLabelStyle,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     trailing: Text(
-                      'Issue date \n ${_miscFunctions.formattedDate(_payment[index].issueDate)}',
+                      'Issue date \n ${_miscFunctions.formattedDate(_orders[index].issueDate)}',
                       style: kLabelStyle,
                       textAlign: TextAlign.left,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentDetailScreen(
-                            role: role,
-                            paymentModel: _payment[index],
-                            party: party,
-                          ),
-                        ),
-                      );
-                    },
+                    onTap: () {},
                     onLongPress: () {
                       if (role == 'Admin') {
                         showDialog(
@@ -112,16 +76,12 @@ class BuildPaymentList extends StatelessWidget {
                                 style: kLabelStyle,
                               ),
                               content: Text(
-                                'Do you want to delete this payment details ?',
+                                'Do you want to delete this cheque details ?',
                                 style: kLabelStyle,
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () {
-                                    _firebaseServices.deleteFromPayment(
-                                        id: _payment[index].id);
-                                    Navigator.of(context).pop();
-                                  },
+                                  onPressed: () {},
                                   child: Text(
                                     'Yes',
                                     style: kLabelStyle,
@@ -149,7 +109,7 @@ class BuildPaymentList extends StatelessWidget {
             },
           )
         : Text(
-            'No payments',
+            'No Orders',
             style: kLabelStyle,
             overflow: TextOverflow.ellipsis,
           );

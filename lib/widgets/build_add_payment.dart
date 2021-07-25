@@ -6,16 +6,16 @@ import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class BuildAddPaymentDialog extends StatefulWidget {
+class BuildAddPayment extends StatefulWidget {
   final PartiesModel partiesModel;
-  const BuildAddPaymentDialog({Key? key, required this.partiesModel})
+  const BuildAddPayment({Key? key, required this.partiesModel})
       : super(key: key);
 
   @override
-  _BuildAddPaymentDialogState createState() => _BuildAddPaymentDialogState();
+  _BuildAddPaymentState createState() => _BuildAddPaymentState();
 }
 
-class _BuildAddPaymentDialogState extends State<BuildAddPaymentDialog> {
+class _BuildAddPaymentState extends State<BuildAddPayment> {
   FirebaseServices _firebaseServices = FirebaseServices();
 
   DateTime _selectedLatestStatusDate = DateTime.now();
@@ -39,8 +39,8 @@ class _BuildAddPaymentDialogState extends State<BuildAddPaymentDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             BuildInput(
-              fieldName: 'Cheque number',
-              hintText: 'Enter cheque number',
+              fieldName: 'Cheque number/ Utr number/ Cash',
+              hintText: 'Enter uique number',
               controller: _paymentNumberController,
               textInputType: TextInputType.streetAddress,
               passwordfield: false,
@@ -229,17 +229,27 @@ class _BuildAddPaymentDialogState extends State<BuildAddPaymentDialog> {
               style: kLabelStyle,
             ),
             onPressed: () {
-              _paymentModel = PaymentModel(
-                partyId: widget.partiesModel.id,
-                name: widget.partiesModel.name,
-                paymentNumber: _paymentNumberController.text,
-                amount: double.parse(_amountController.text),
-                issueDate: _selectedIssueDate,
-                status: _statusValue,
-                statusDate: _selectedLatestStatusDate,
-              );
-              _firebaseServices.addToPayment(paymentModel: _paymentModel);
-              Navigator.of(context).pop();
+              if (_paymentNumberController.text.isEmpty ||
+                  _amountController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('All fields are necessary'),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              } else {
+                _paymentModel = PaymentModel(
+                  partyId: widget.partiesModel.id,
+                  name: widget.partiesModel.name,
+                  paymentNumber: _paymentNumberController.text,
+                  amount: double.parse(_amountController.text),
+                  issueDate: _selectedIssueDate,
+                  status: _statusValue,
+                  statusDate: _selectedLatestStatusDate,
+                );
+                _firebaseServices.addToPayment(paymentModel: _paymentModel);
+                Navigator.of(context).pop();
+              }
             }),
         TextButton(
           child: Text(

@@ -6,7 +6,6 @@ import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:cheque_app/widgets/build_select_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -39,6 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late UserModel _user;
 
   late String _selectedRole;
+
+  late bool _canEditOrderStatus = false;
 
   Widget _buildShowPasswordCheckbox() {
     return Container(
@@ -82,7 +83,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 if (_nameController.text == '' ||
                     _emailController.text == '' ||
                     _passwordController.text == '' ||
-                    _confirmPasswordController.text == '') {
+                    _confirmPasswordController.text == '' ||
+                    _selectedProducts.isEmpty) {
                   setState(() {
                     _isLoading = false;
                   });
@@ -125,6 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         registerDate: DateTime.now(),
                         products: _selectedProducts,
                         canAddParty: _canAddParty,
+                        canEditOrderStatus: _canEditOrderStatus,
                       );
                       var _error = await _firebaseServices
                           .createAccount(
@@ -205,7 +208,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<dynamic> _products = Provider.of<List<dynamic>>(context);
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -315,8 +317,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     if (_selectedRole == _roleOptions[1]) {
                                       _selectedProducts = [];
                                       _canAddParty = true;
+                                      _canEditOrderStatus = true;
                                     } else {
                                       _canAddParty = false;
+                                      _canEditOrderStatus = false;
                                     }
                                   });
                                 },

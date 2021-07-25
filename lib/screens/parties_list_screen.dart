@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class PartiesListScreen extends StatefulWidget {
-  const PartiesListScreen({Key? key}) : super(key: key);
+class PartiesScreen extends StatefulWidget {
+  const PartiesScreen({Key? key}) : super(key: key);
 
   @override
-  _PartiesListScreenState createState() => _PartiesListScreenState();
+  _PartiesScreenState createState() => _PartiesScreenState();
 }
 
-class _PartiesListScreenState extends State<PartiesListScreen> {
+class _PartiesScreenState extends State<PartiesScreen> {
   @override
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);

@@ -1,8 +1,8 @@
-import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// ignore: must_be_immutable
 class BuildSelectProducts extends StatefulWidget {
   @override
   _BuildSelectProductsState createState() => _BuildSelectProductsState();
@@ -10,8 +10,6 @@ class BuildSelectProducts extends StatefulWidget {
 }
 
 class _BuildSelectProductsState extends State<BuildSelectProducts> {
-  FirebaseServices _firebaseServices = FirebaseServices();
-
   @override
   Widget build(BuildContext context) {
     List<dynamic> _products = Provider.of<List<dynamic>>(context);
