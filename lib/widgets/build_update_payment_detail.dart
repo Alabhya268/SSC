@@ -54,8 +54,8 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             BuildInput(
-              fieldName: 'Cheque number',
-              hintText: 'Enter Cheque number',
+              fieldName: 'Cheque number/ Utr number/ Cash',
+              hintText: 'Enter here',
               controller: _paymentNumberController,
               textInputType: TextInputType.streetAddress,
               passwordfield: false,
@@ -289,16 +289,22 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
             style: kLabelStyle,
           ),
           onPressed: () async {
-            await _firebaseServices.updatePaymentDetails(
-              chequeId: widget.paymentModel.id,
-              paymentNumber: _paymentNumberController.text,
-              amount: double.parse(_amountController.text),
-              issueDate: _selectedIssueDate,
-              status: _statusValue,
-              statusDate: _selectedStatusDate,
-              isFreezed: _isFreezed,
-            );
-            Navigator.of(context).pop();
+            await _firebaseServices
+                .updatePaymentDetails(
+                  chequeId: widget.paymentModel.id,
+                  paymentNumber: _paymentNumberController.text,
+                  amount: double.parse(_amountController.text),
+                  issueDate: _selectedIssueDate,
+                  status: _statusValue,
+                  statusDate: _selectedStatusDate,
+                  isFreezed: _isFreezed,
+                )
+                .whenComplete(
+                  () => Navigator.of(context).pop(),
+                )
+                .onError(
+                  (error, stackTrace) => print(error),
+                );
           },
         ),
         TextButton(

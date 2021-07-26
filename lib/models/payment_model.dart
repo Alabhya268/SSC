@@ -12,6 +12,7 @@ class PaymentModel {
   bool isFreezed = false;
 
   PaymentModel({
+    this.id = '',
     required this.partyId,
     required this.name,
     required this.paymentNumber,

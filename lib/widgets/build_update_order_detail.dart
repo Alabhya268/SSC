@@ -1,57 +1,59 @@
 import 'package:cheque_app/models/orders_model.dart';
-import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class BuildAddOrder extends StatefulWidget {
-  final PartiesModel partiesModel;
+class BuildUpdateOrderDetail extends StatefulWidget {
+  final OrdersModel ordersModel;
   final UserModel userModel;
-  const BuildAddOrder({
+  const BuildUpdateOrderDetail({
     Key? key,
-    required this.partiesModel,
+    required this.ordersModel,
     required this.userModel,
   }) : super(key: key);
 
   @override
-  _BuildAddOrderState createState() => _BuildAddOrderState();
+  _BuildUpdateOrderDetailState createState() => _BuildUpdateOrderDetailState();
 }
 
-class _BuildAddOrderState extends State<BuildAddOrder> {
+class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
   FirebaseServices _firebaseServices = FirebaseServices();
-
-  String _statusValue = 'Pending';
-  List<String> _statusOptions = [
-    'Pending',
-    'Approved',
-  ];
+  MiscFunctions _miscFunctions = MiscFunctions();
   TextEditingController _numberOfUnits = TextEditingController();
   TextEditingController _perUnitAmount = TextEditingController();
   TextEditingController _description = TextEditingController();
-  bool _billed = false;
   TextEditingController _tax = TextEditingController();
+  late bool _billed;
   TextEditingController _extraCharges = TextEditingController();
-  DateTime _selectedStatusDate = DateTime.now();
-  DateTime _selectedIssueDate = DateTime.now();
+  late DateTime _issueDate;
+  late String _statusValue;
+  late DateTime _statusDate;
 
-  late OrdersModel _orderModel;
+  void initState() {
+    _numberOfUnits.text = widget.ordersModel.numberOfUnits.toString();
+    _perUnitAmount.text = widget.ordersModel.perUnitAmount.toString();
+    _billed = widget.ordersModel.billed;
+    _extraCharges.text = widget.ordersModel.extraCharges.toString();
+    _issueDate = widget.ordersModel.issueDate;
+    _statusValue = widget.ordersModel.status;
+    _statusDate = widget.ordersModel.statusDate;
+    _description.text = widget.ordersModel.description;
+    _tax.text = widget.ordersModel.tax.toString();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    _tax.text = '0';
-    _extraCharges.text = '0';
-    _numberOfUnits.text = '1';
-    _perUnitAmount.text = '1';
-    _description.text = '';
-
+    List<String> _statusOptions = [
+      'Pending',
+      'Approved',
+    ];
     return AlertDialog(
       backgroundColor: kRegularColor,
-      title: Text(
-        'Add order',
-        style: kLabelStyle,
-      ),
+      title: Text('Update Order', style: kLabelStyle),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,13 +189,13 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
                       );
                       if (pickedDate != null) {
                         setState(() {
-                          _selectedIssueDate = pickedDate;
+                          _statusDate = pickedDate;
                         });
                       }
                     },
                     icon: Icon(Icons.date_range_outlined,
                         color: kRegularIconColor),
-                    label: Text(DateFormat.yMMMMd().format(_selectedIssueDate),
+                    label: Text(_miscFunctions.formattedDate(_issueDate),
                         style: kLabelStyle),
                   ),
                 ),
@@ -298,15 +300,14 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
                             if (pickedDate != null) {
                               setState(
                                 () {
-                                  _selectedStatusDate = pickedDate;
+                                  _statusDate = pickedDate;
                                 },
                               );
                             }
                           },
                           icon: Icon(Icons.date_range_outlined,
                               color: kRegularIconColor),
-                          label: Text(
-                              DateFormat.yMMMMd().format(_selectedStatusDate),
+                          label: Text(_miscFunctions.formattedDate(_statusDate),
                               style: kLabelStyle),
                         ),
                       ),
@@ -324,38 +325,27 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
       actions: <Widget>[
         TextButton(
           child: Text(
-            'Add',
+            'Update',
             style: kLabelStyle,
           ),
-          onPressed: () {
-            _orderModel = OrdersModel(
-              partyId: widget.partiesModel.id,
-              uid: _firebaseServices.getCurrentUserId(),
-              product: widget.partiesModel.product,
-              perUnitAmount: double.parse(_perUnitAmount.text),
-              numberOfUnits: double.parse(_numberOfUnits.text),
-              status: _statusValue,
-              description: _description.text,
-              billed: _billed,
-              tax: double.parse(_tax.text),
-              extraCharges: double.parse(_extraCharges.text),
-              issueDate: _selectedIssueDate,
-              statusDate: _selectedStatusDate,
-            );
-            _firebaseServices.addToOrder(orderModel: _orderModel).whenComplete(
-              () async {
-                if (_statusValue == _statusOptions[1]) {
-                  return _firebaseServices
-                      .updateUserOrders(
-                          uid: widget.userModel.uid,
-                          orders:
-                              await _firebaseServices.getCurrentUserOrders() +
-                                  1)
-                      .whenComplete(() => Navigator.of(context).pop());
-                }
-                Navigator.of(context).pop();
-              },
-            );
+          onPressed: () async {
+            await _firebaseServices
+                .updateOrderDetails(
+                  orderId: widget.ordersModel.id,
+                  numberOfUnits: double.parse(_numberOfUnits.text),
+                  perUnitAmount: double.parse(_perUnitAmount.text),
+                  billed: _billed,
+                  tax: double.parse(_tax.text),
+                  extraCharges: double.parse(_extraCharges.text),
+                  description: _description.text,
+                  issueDate: _issueDate,
+                  status: _statusValue,
+                  statusDate: _statusDate,
+                )
+                .whenComplete(() => Navigator.of(context).pop())
+                .onError(
+                  (error, stackTrace) => print(error),
+                );
           },
         ),
         TextButton(

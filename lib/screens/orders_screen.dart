@@ -164,6 +164,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                           isApproved: _isApproved,
                           isPending: _isPending,
                           party: widget.partyModel,
+                          userModel: widget.userModel,
                         ),
                       ),
                     ],

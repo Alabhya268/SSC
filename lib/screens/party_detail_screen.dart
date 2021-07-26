@@ -99,7 +99,8 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                     ),
                   ],
                   builder: (context, widget) {
-                    PartiesModel _party = Provider.of<PartiesModel>(context);
+                    PartiesModel _partiesModel =
+                        Provider.of<PartiesModel>(context);
                     List<PaymentModel> _paymentList =
                         Provider.of<List<PaymentModel>>(context);
                     double _totalPayment = 0;
@@ -112,7 +113,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${_party.name}',
+                          '${_partiesModel.name}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -125,7 +126,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                           height: 10.0,
                         ),
                         Text(
-                          '${_party.location}',
+                          '${_partiesModel.location}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -153,12 +154,24 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                               ),
                               ListTile(
                                 title: Text(
+                                  'Party id',
+                                  style: kTextStyleRegular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  '${_partiesModel.id}',
+                                  style: kTextStyleRegularSubtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
                                   'Name',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_party.name}',
+                                  '${_partiesModel.name}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -170,7 +183,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_party.location}',
+                                  '${_partiesModel.location}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -182,7 +195,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_miscFunctions.formattedDate(_party.registrationDate)}',
+                                  '${_miscFunctions.formattedDate(_partiesModel.registrationDate)}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -194,7 +207,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_party.product}',
+                                  '${_partiesModel.product}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -206,7 +219,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_party.limit}',
+                                  '${_partiesModel.limit}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -230,7 +243,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_party.limit}',
+                                  '${_partiesModel.limit}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),

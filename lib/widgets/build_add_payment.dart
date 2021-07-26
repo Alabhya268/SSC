@@ -33,14 +33,14 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: kRegularColor,
-      title: Text('Add Cheque', style: kLabelStyle),
+      title: Text('Add Payment', style: kLabelStyle),
       content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             BuildInput(
               fieldName: 'Cheque number/ Utr number/ Cash',
-              hintText: 'Enter uique number',
+              hintText: 'Enter here',
               controller: _paymentNumberController,
               textInputType: TextInputType.streetAddress,
               passwordfield: false,

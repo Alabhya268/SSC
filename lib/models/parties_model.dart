@@ -9,6 +9,7 @@ class PartiesModel {
   DateTime registrationDate = DateTime.now();
 
   PartiesModel({
+    this.id = '',
     required this.name,
     required this.location,
     required this.limit,

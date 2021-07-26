@@ -1,48 +1,33 @@
-import 'package:cheque_app/models/payment_model.dart';
+import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
+import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
-import 'package:cheque_app/widgets/build_update_payment_detail.dart';
+import 'package:cheque_app/widgets/build_update_order_detail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cheque_app/utilities/extension.dart';
 
-class PaymentDetailScreen extends StatefulWidget {
-  final String role;
+class OrderDetailScreen extends StatefulWidget {
+  final UserModel userModel;
   final PartiesModel party;
-  final PaymentModel paymentModel;
-  const PaymentDetailScreen({
+  final OrdersModel orderModel;
+  const OrderDetailScreen({
     Key? key,
-    required this.paymentModel,
+    required this.orderModel,
     required this.party,
-    required this.role,
+    required this.userModel,
   }) : super(key: key);
 
   @override
-  _PaymentDetailScreenState createState() => _PaymentDetailScreenState();
+  _OrderDetailScreenState createState() => _OrderDetailScreenState();
 }
 
-class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
+class _OrderDetailScreenState extends State<OrderDetailScreen> {
   FirebaseServices _firebaseServices = FirebaseServices();
   MiscFunctions _miscFunctions = MiscFunctions();
-
-  bool _isUpdateButtonVisible(bool isFreezed) {
-    bool _updateButtonVisibility = false;
-    if (widget.role == 'Admin') {
-      _updateButtonVisibility = true;
-    } else {
-      if (widget.role == 'Accountant') {
-        if (isFreezed) {
-          _updateButtonVisibility = false;
-        } else {
-          _updateButtonVisibility = true;
-        }
-      }
-    }
-    return _updateButtonVisibility;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,21 +63,26 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                 horizontal: 20.0,
               ),
               child: SingleChildScrollView(
-                child: StreamProvider<PaymentModel>.value(
-                  value: _firebaseServices.getPaymentDetail(
-                      paymentId: widget.paymentModel.id),
-                  initialData: PaymentModel(
-                    partyId: widget.paymentModel.id,
-                    name: widget.paymentModel.name,
-                    paymentNumber: widget.paymentModel.paymentNumber,
-                    amount: widget.paymentModel.amount,
-                    issueDate: widget.paymentModel.issueDate,
-                    status: widget.paymentModel.status,
-                    statusDate: widget.paymentModel.statusDate,
+                child: StreamProvider<OrdersModel>.value(
+                  value: _firebaseServices.getOrderDetail(
+                      orderId: widget.orderModel.id),
+                  initialData: OrdersModel(
+                    id: widget.orderModel.id,
+                    uid: widget.orderModel.uid,
+                    partyId: widget.orderModel.partyId,
+                    product: widget.orderModel.product,
+                    perUnitAmount: widget.orderModel.perUnitAmount,
+                    numberOfUnits: widget.orderModel.numberOfUnits,
+                    status: widget.orderModel.status,
+                    description: widget.orderModel.description,
+                    billed: widget.orderModel.billed,
+                    tax: widget.orderModel.tax,
+                    extraCharges: widget.orderModel.extraCharges,
+                    issueDate: widget.orderModel.issueDate,
+                    statusDate: widget.orderModel.statusDate,
                   ),
                   builder: (context, snapshots) {
-                    PaymentModel _paymentModel =
-                        Provider.of<PaymentModel>(context);
+                    OrdersModel _orderModel = Provider.of<OrdersModel>(context);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
@@ -131,54 +121,105 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                               ),
                               Center(
                                 child: Text(
-                                  'Payment Details',
+                                  'Order Details',
                                   style: kTextStyleRegular,
                                 ),
                               ),
                               ListTile(
                                 title: Text(
-                                  'Payment id',
+                                  'Order id',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_paymentModel.id}',
+                                  '${_orderModel.id}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               ListTile(
                                 title: Text(
-                                  'Cheque number/ Utr number/ Cash',
+                                  'Number of units',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_paymentModel.paymentNumber}',
+                                  '${_orderModel.numberOfUnits}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               ListTile(
                                 title: Text(
-                                  'Issue Date',
+                                  'Per unit amount',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_miscFunctions.formattedDate(_paymentModel.issueDate)}',
+                                  '${_orderModel.perUnitAmount}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               ListTile(
                                 title: Text(
-                                  'Amount',
+                                  'Billed',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_paymentModel.amount}',
+                                  _orderModel.billed ? 'Billed' : 'Not Billed',
+                                  style: kTextStyleRegularSubtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              if (_orderModel.billed)
+                                ListTile(
+                                  title: Text(
+                                    'Tax',
+                                    style: kTextStyleRegular,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  subtitle: Text(
+                                    '${_orderModel.tax}',
+                                    style: kTextStyleRegularSubtitle,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ListTile(
+                                title: Text(
+                                  'Extra charges',
+                                  style: kTextStyleRegular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  '${_orderModel.extraCharges}',
+                                  style: kTextStyleRegularSubtitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                  'Description',
+                                  style: kTextStyleRegular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  _orderModel.description.isEmpty
+                                      ? 'No description'
+                                      : '${_orderModel.description}',
+                                  style: kTextStyleRegularSubtitle,
+                                  overflow: TextOverflow.fade,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                  'Issue date',
+                                  style: kTextStyleRegular,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  '${_miscFunctions.formattedDate(_orderModel.issueDate)}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -190,19 +231,19 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_paymentModel.status}',
+                                  '${_orderModel.status}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               ListTile(
                                 title: Text(
-                                  'Status Date',
+                                  'Status date',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_miscFunctions.formattedDate(_paymentModel.statusDate)}',
+                                  '${_miscFunctions.formattedDate(_orderModel.statusDate)}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -210,48 +251,41 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                             ],
                           ),
                         ),
-                        if (_isUpdateButtonVisible(_paymentModel.isFreezed))
-                          Container(
-                            padding: EdgeInsets.symmetric(vertical: 25.0),
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.all(15.0),
-                                elevation: 5.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                ),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 25.0),
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.all(15.0),
+                              elevation: 5.0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
                               ),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return BuildUpdatePaymentDetail(
-                                      role: widget.role,
-                                      paymentModel: _paymentModel,
-                                    );
-                                  },
-                                );
-                              },
-                              child: Text(
-                                'Update',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  letterSpacing: 1.5,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'OpenSans',
-                                ),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return BuildUpdateOrderDetail(
+                                    ordersModel: _orderModel,
+                                    userModel: widget.userModel,
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              'Update',
+                              style: TextStyle(
+                                color: Colors.white,
+                                letterSpacing: 1.5,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'OpenSans',
                               ),
                             ),
                           ),
-                        if (!_isUpdateButtonVisible(_paymentModel.isFreezed))
-                          Text(
-                            'Detail of this payment has been freezed by admin',
-                            style: kHintTextStyle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        ),
                       ],
                     );
                   },

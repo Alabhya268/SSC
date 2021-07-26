@@ -30,7 +30,10 @@ class _BuildAddPartyState extends State<BuildAddParty> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: kRegularColor,
-      title: Text('Add Party', style: kLabelStyle),
+      title: Text(
+        'Add Party',
+        style: kLabelStyle,
+      ),
       content: SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -130,6 +133,9 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
               ],
             ),

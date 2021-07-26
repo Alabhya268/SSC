@@ -13,6 +13,7 @@ class UserModel {
   late bool canEditOrderStatus;
 
   UserModel({
+    this.uid = '',
     required this.name,
     required this.email,
     required this.role,

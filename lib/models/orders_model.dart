@@ -16,6 +16,7 @@ class OrdersModel {
   DateTime statusDate = DateTime.now();
 
   OrdersModel({
+    this.id = '',
     required this.uid,
     required this.partyId,
     required this.product,

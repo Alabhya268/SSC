@@ -63,6 +63,7 @@ class FirebaseServices {
               querySnapshot.docs.map((order) {
             _ordersModel =
                 OrdersModel.fromData(order.data() as Map<String, dynamic>);
+            _ordersModel.id = order.id;
             return _ordersModel;
           }).toList(),
         );
@@ -105,12 +106,49 @@ class FirebaseServices {
   }
 
   Stream<PaymentModel> getPaymentDetail({required String paymentId}) =>
-      paymentsRef.doc(paymentId).snapshots().map((payment) =>
-          PaymentModel.fromData(payment.data() as Map<String, dynamic>));
+      paymentsRef.doc(paymentId).snapshots().map((payment) {
+        PaymentModel _paymentModel;
+        _paymentModel =
+            PaymentModel.fromData(payment.data() as Map<String, dynamic>);
+        _paymentModel.id = payment.id;
+        return _paymentModel;
+      });
+
+  Stream<OrdersModel> getOrderDetail({required String orderId}) =>
+      ordersRef.doc(orderId).snapshots().map((order) {
+        OrdersModel _orderModel;
+        _orderModel =
+            OrdersModel.fromData(order.data() as Map<String, dynamic>);
+        _orderModel.id = order.id;
+        return _orderModel;
+      });
+
+  Future<OrdersModel> getOrderDetailOnce({required String orderId}) async =>
+      await ordersRef.doc(orderId).get().then((order) {
+        OrdersModel _orderModel;
+        _orderModel =
+            OrdersModel.fromData(order.data() as Map<String, dynamic>);
+        _orderModel.id = order.id;
+        return _orderModel;
+      });
+
+  Future<PaymentModel> getPaymentDetailOnce({required String paymentId}) =>
+      paymentsRef.doc(paymentId).get().then((payment) {
+        PaymentModel _paymentModel;
+        _paymentModel =
+            PaymentModel.fromData(payment.data() as Map<String, dynamic>);
+        _paymentModel.id = payment.id;
+        return _paymentModel;
+      });
 
   Stream<PartiesModel> getPartyDetail({required String partyId}) =>
-      partiesRef.doc(partyId).snapshots().map((party) =>
-          PartiesModel.fromData(party.data() as Map<String, dynamic>));
+      partiesRef.doc(partyId).snapshots().map((party) {
+        PartiesModel _partiesModel;
+        _partiesModel =
+            PartiesModel.fromData(party.data() as Map<String, dynamic>);
+        _partiesModel.id = party.id;
+        return _partiesModel;
+      });
 
   Stream<List<dynamic>> get getProducts =>
       productListRef.snapshots().map((value) => value.docs
@@ -159,6 +197,32 @@ class FirebaseServices {
         ' Error from firebase Service in method updatePaymentDetails: $error'));
   }
 
+  Future<void> updateOrderDetails({
+    required String orderId,
+    required double numberOfUnits,
+    required double perUnitAmount,
+    required bool billed,
+    required double tax,
+    required double extraCharges,
+    required String description,
+    required DateTime issueDate,
+    required String status,
+    required DateTime statusDate,
+  }) async {
+    ordersRef.doc(orderId).update({
+      'numberOfUnits': numberOfUnits,
+      'perUnitAmount': perUnitAmount,
+      'billed': billed,
+      'tax': tax,
+      'extraCharges': extraCharges,
+      'description': description,
+      'issueDate': issueDate,
+      'status': status,
+      'statusDate': statusDate,
+    }).onError((error, stackTrace) => print(
+        ' Error from firebase Service in method updateOrderDetails: $error'));
+  }
+
   Future<void> updateUserDetails({
     required String uid,
     required bool approved,
@@ -205,6 +269,11 @@ class FirebaseServices {
   Future<void> deleteFromPayment({required String id}) async {
     paymentsRef.doc(id).delete().onError((error, stackTrace) => print(
         ' Error from firebase Service in method deleteFromPayment: $error'));
+  }
+
+  Future<void> deleteFromOrder({required String id}) async {
+    ordersRef.doc(id).delete().onError((error, stackTrace) => print(
+        ' Error from firebase Service in method deleteFromOrder: $error'));
   }
 
   Future<String?> createAccount(
