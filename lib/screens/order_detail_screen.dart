@@ -1,5 +1,6 @@
 import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
+import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
@@ -31,6 +32,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    PartiesModel _partiesModel = widget.party;
+    UserModel _userModel = widget.userModel;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -63,31 +66,86 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 horizontal: 20.0,
               ),
               child: SingleChildScrollView(
-                child: StreamProvider<OrdersModel>.value(
-                  value: _firebaseServices.getOrderDetail(
-                      orderId: widget.orderModel.id),
-                  initialData: OrdersModel(
-                    id: widget.orderModel.id,
-                    uid: widget.orderModel.uid,
-                    partyId: widget.orderModel.partyId,
-                    product: widget.orderModel.product,
-                    perUnitAmount: widget.orderModel.perUnitAmount,
-                    numberOfUnits: widget.orderModel.numberOfUnits,
-                    status: widget.orderModel.status,
-                    description: widget.orderModel.description,
-                    billed: widget.orderModel.billed,
-                    tax: widget.orderModel.tax,
-                    extraCharges: widget.orderModel.extraCharges,
-                    issueDate: widget.orderModel.issueDate,
-                    statusDate: widget.orderModel.statusDate,
-                  ),
-                  builder: (context, snapshots) {
+                child: MultiProvider(
+                  providers: [
+                    StreamProvider<List<PaymentModel>>.value(
+                      value: _firebaseServices.getPartyPayments(
+                          partyId: _partiesModel.id),
+                      initialData: [],
+                      catchError: (context, snapshot) {
+                        return [];
+                      },
+                    ),
+                    StreamProvider<List<OrdersModel>>.value(
+                      value: _firebaseServices.getPartyOrders(
+                          partyId: _partiesModel.id),
+                      initialData: [],
+                    ),
+                    StreamProvider<PartiesModel>.value(
+                      value: _firebaseServices.getPartyDetail(
+                        partyId: _partiesModel.id,
+                      ),
+                      initialData: PartiesModel(
+                        limit: _partiesModel.limit,
+                        location: _partiesModel.location,
+                        name: _partiesModel.name,
+                        product: _partiesModel.product,
+                      ),
+                      catchError: (context, snapshot) {
+                        return PartiesModel(
+                          name: '',
+                          location: '',
+                          limit: 0,
+                          product: '',
+                        );
+                      },
+                    ),
+                    StreamProvider<OrdersModel>.value(
+                      value: _firebaseServices.getOrderDetail(
+                          orderId: widget.orderModel.id),
+                      initialData: OrdersModel(
+                        id: widget.orderModel.id,
+                        uid: widget.orderModel.uid,
+                        partyId: widget.orderModel.partyId,
+                        product: widget.orderModel.product,
+                        perUnitAmount: widget.orderModel.perUnitAmount,
+                        numberOfUnits: widget.orderModel.numberOfUnits,
+                        status: widget.orderModel.status,
+                        description: widget.orderModel.description,
+                        billed: widget.orderModel.billed,
+                        tax: widget.orderModel.tax,
+                        extraCharges: widget.orderModel.extraCharges,
+                        issueDate: widget.orderModel.issueDate,
+                        statusDate: widget.orderModel.statusDate,
+                      ),
+                    ),
+                  ],
+                  builder: (context, widget) {
                     OrdersModel _orderModel = Provider.of<OrdersModel>(context);
+                    PartiesModel _partiesModel =
+                        Provider.of<PartiesModel>(context);
+                    List<OrdersModel> _orderList =
+                        Provider.of<List<OrdersModel>>(context);
+                    List<PaymentModel> _paymentList =
+                        Provider.of<List<PaymentModel>>(context);
+                    double _totalPayment = 0;
+                    double _totalOutStanding = 0;
+                    _paymentList.forEach((element) {
+                      if (element.status == 'Approved')
+                        _totalPayment = _totalPayment + element.amount;
+                    });
+                    _orderList.forEach((element) {
+                      if (element.status == 'Approved')
+                        _totalOutStanding =
+                            _totalOutStanding + element.totalOrder;
+                    });
+                    double _credit =
+                        _partiesModel.limit - _totalOutStanding + _totalPayment;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${widget.party.name.capitalizeFirstofEach}',
+                          '${_partiesModel.name.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -99,7 +157,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           height: 10.0,
                         ),
                         Text(
-                          '${widget.party.location.capitalizeFirstofEach}',
+                          '${_partiesModel.location.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -163,7 +221,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               ),
                               ListTile(
                                 title: Text(
-                                  'Billed',
+                                  'Billing status',
                                   style: kTextStyleRegular,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -268,8 +326,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
                                   return BuildUpdateOrderDetail(
+                                    credit: _credit,
                                     ordersModel: _orderModel,
-                                    userModel: widget.userModel,
+                                    userModel: _userModel,
                                   );
                                 },
                               );

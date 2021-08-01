@@ -28,8 +28,7 @@ class FirebaseServices {
   final CollectionReference productListRef =
       FirebaseFirestore.instance.collection("productList");
 
-  Future<int> getCurrentUserOrders() =>
-      usersRef.doc(getCurrentUserId()).get().then((user) {
+  Future<int> getUserOrders(String uid) => usersRef.doc(uid).get().then((user) {
         return UserModel.fromData(user.data() as Map<String, dynamic>).orders;
       });
 
@@ -157,6 +156,12 @@ class FirebaseServices {
           .first
           .productList);
 
+  Stream<List<OrdersModel>> get getOrders =>
+      ordersRef.snapshots().map((value) => value.docs
+          .map((orders) =>
+              OrdersModel.fromData(orders.data() as Map<String, dynamic>))
+          .toList());
+
   Stream<bool> get getUserApproved => usersRef
       .doc(getCurrentUserId())
       .snapshots()
@@ -224,11 +229,15 @@ class FirebaseServices {
   }
 
   Future<void> updateUserDetails({
+    required bool canAddParty,
+    required List<dynamic> products,
     required String uid,
     required bool approved,
     required String role,
   }) async {
     usersRef.doc(uid).update({
+      'canAddParty': canAddParty,
+      'products': products,
       'approved': approved,
       'role': role
     }).onError((error, stackTrace) => print(

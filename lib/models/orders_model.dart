@@ -12,6 +12,7 @@ class OrdersModel {
   late bool billed;
   late double tax;
   late double extraCharges;
+  late double totalOrder;
   DateTime issueDate = DateTime.now();
   DateTime statusDate = DateTime.now();
 
@@ -35,13 +36,21 @@ class OrdersModel {
       : uid = data['uid'] ?? '',
         partyId = data['partyId'] ?? '',
         product = data['product'] ?? '',
-        perUnitAmount = data['perUnitAmount'] ?? 1,
-        numberOfUnits = data['numberOfUnits'] ?? 1,
+        perUnitAmount = data['perUnitAmount'].toDouble() ?? 1,
+        numberOfUnits = data['numberOfUnits'].toDouble() ?? 1,
         status = data['status'] ?? '',
         description = data['description'] ?? '',
         billed = data['billed'] ?? false,
         tax = data['tax'] ?? 0,
-        extraCharges = data['extraCharges'] ?? 0,
+        extraCharges = data['extraCharges'].toDouble() ?? 0,
+        totalOrder = data['extraCharges'].toDouble() +
+                (data['perUnitAmount'].toDouble() *
+                    data['numberOfUnits'].toDouble()) +
+                (data['perUnitAmount'].toDouble() *
+                    data['numberOfUnits'].toDouble() *
+                    data['tax'].toDouble() *
+                    0.01) ??
+            0,
         issueDate = (data['issueDate'] as Timestamp).toDate(),
         statusDate = (data['statusDate'] as Timestamp).toDate();
 

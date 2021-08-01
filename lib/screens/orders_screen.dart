@@ -1,22 +1,25 @@
 import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
+import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/widgets/build_add_order.dart';
 import 'package:cheque_app/widgets/build_order_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cheque_app/utilities/extension.dart';
 
 class OrdersScreen extends StatefulWidget {
+  final double limit;
   final PartiesModel partyModel;
   final UserModel userModel;
   const OrdersScreen({
     Key? key,
     required this.partyModel,
     required this.userModel,
+    required this.limit,
   }) : super(key: key);
 
   @override
@@ -29,6 +32,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
   bool _isPending = true;
   @override
   Widget build(BuildContext context) {
+    PartiesModel _partiesModel = widget.partyModel;
+    UserModel _userModel = widget.userModel;
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -49,26 +54,70 @@ class _OrdersScreenState extends State<OrdersScreen> {
         elevation: 0,
         backgroundColor: Color(0xFF73AEF5),
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: kBackgroundBoxStyle,
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: StreamProvider<List<OrdersModel>>.value(
-                value: _firebaseServices.getPartyOrders(
-                    partyId: widget.partyModel.id),
-                initialData: [],
-                catchError: (context, snapshots) {
-                  return [];
-                },
-                builder: (context, snapshots) {
-                  return Column(
+      body: MultiProvider(
+        providers: [
+          StreamProvider<List<PaymentModel>>.value(
+            value:
+                _firebaseServices.getPartyPayments(partyId: _partiesModel.id),
+            initialData: [],
+            catchError: (context, snapshot) {
+              return [];
+            },
+          ),
+          StreamProvider<List<OrdersModel>>.value(
+            value: _firebaseServices.getPartyOrders(partyId: _partiesModel.id),
+            initialData: [],
+          ),
+          StreamProvider<PartiesModel>.value(
+            value: _firebaseServices.getPartyDetail(
+              partyId: _partiesModel.id,
+            ),
+            initialData: PartiesModel(
+              limit: _partiesModel.limit,
+              location: _partiesModel.location,
+              name: _partiesModel.name,
+              product: _partiesModel.product,
+            ),
+            catchError: (context, snapshot) {
+              return PartiesModel(
+                name: '',
+                location: '',
+                limit: 0,
+                product: '',
+              );
+            },
+          ),
+        ],
+        builder: (context, widget) {
+          PartiesModel _partiesModel = Provider.of<PartiesModel>(context);
+          List<OrdersModel> _orderList =
+              Provider.of<List<OrdersModel>>(context);
+          List<PaymentModel> _paymentList =
+              Provider.of<List<PaymentModel>>(context);
+          double _totalPayment = 0;
+          double _totalOutStanding = 0;
+          _paymentList.forEach((element) {
+            if (element.status == 'Approved')
+              _totalPayment = _totalPayment + element.amount;
+          });
+          _orderList.forEach((element) {
+            if (element.status == 'Approved')
+              _totalOutStanding = _totalOutStanding + element.totalOrder;
+          });
+          double _credit =
+              _partiesModel.limit - _totalOutStanding + _totalPayment;
+          return Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: kBackgroundBoxStyle,
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Text(
@@ -85,7 +134,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         height: 10.0,
                       ),
                       Text(
-                        '${widget.partyModel.name.capitalizeFirstofEach}',
+                        '${_partiesModel.name.capitalizeFirstofEach}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'OpenSans',
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Credit: $_credit',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
@@ -163,39 +224,37 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         child: BuildOrderList(
                           isApproved: _isApproved,
                           isPending: _isPending,
-                          party: widget.partyModel,
-                          userModel: widget.userModel,
+                          party: _partiesModel,
+                          userModel: _userModel,
                         ),
                       ),
                     ],
-                  );
-                },
+                  ),
+                ),
               ),
-            ),
-          ),
-          if (widget.userModel.role == 'Admin' ||
-              widget.userModel.role == 'Accountant' ||
-              widget.userModel.canAddParty)
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return BuildAddOrder(
-                        partiesModel: widget.partyModel,
-                        userModel: widget.userModel,
-                      );
-                    },
-                  );
-                },
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: FloatingActionButton(
+                  child: Icon(Icons.add),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return BuildAddOrder(
+                          credit: _credit,
+                          partiesModel: _partiesModel,
+                          userModel: _userModel,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

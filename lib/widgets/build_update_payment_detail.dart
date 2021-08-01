@@ -24,14 +24,14 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
   MiscFunctions _miscFunctions = MiscFunctions();
   TextEditingController _amountController = TextEditingController();
   TextEditingController _paymentNumberController = TextEditingController();
-  var _selectedStatusDate;
-  var _selectedIssueDate;
+  var _statusDate;
+  var _issueDate;
   late bool _isFreezed;
   late String _statusValue;
 
   void initState() {
-    _selectedStatusDate = widget.paymentModel.statusDate;
-    _selectedIssueDate = widget.paymentModel.issueDate;
+    _statusDate = widget.paymentModel.statusDate;
+    _issueDate = widget.paymentModel.issueDate;
     _isFreezed = widget.paymentModel.isFreezed;
     _statusValue = widget.paymentModel.status;
     _amountController.text = widget.paymentModel.amount.toString();
@@ -100,19 +100,17 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                         initialDate: DateTime.now(),
                         firstDate:
                             DateTime(DateTime.now().year - DateTime(5).year),
-                        lastDate:
-                            DateTime(DateTime.now().year + DateTime(5).year),
+                        lastDate: DateTime.now(),
                       );
                       if (pickedDate != null) {
                         setState(() {
-                          _selectedIssueDate = pickedDate;
+                          _issueDate = pickedDate;
                         });
                       }
                     },
                     icon: Icon(Icons.date_range_outlined,
                         color: kRegularIconColor),
-                    label: Text(
-                        '${_miscFunctions.formattedDate(_selectedIssueDate)}',
+                    label: Text('${_miscFunctions.formattedDate(_issueDate)}',
                         style: kLabelStyle),
                   ),
                 ),
@@ -215,13 +213,12 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                         initialDate: DateTime.now(),
                         firstDate:
                             DateTime(DateTime.now().year - DateTime(5).year),
-                        lastDate:
-                            DateTime(DateTime.now().year + DateTime(5).year),
+                        lastDate: DateTime.now(),
                       );
                       if (pickedDate != null) {
                         setState(
                           () {
-                            _selectedStatusDate = pickedDate;
+                            _statusDate = pickedDate;
                           },
                         );
                       }
@@ -229,7 +226,7 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                     icon: Icon(Icons.date_range_outlined,
                         color: kRegularIconColor),
                     label: Text(
-                      '${_miscFunctions.formattedDate(_selectedStatusDate)}',
+                      '${_miscFunctions.formattedDate(_statusDate)}',
                       style: kLabelStyle,
                     ),
                   ),
@@ -294,9 +291,9 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                   chequeId: widget.paymentModel.id,
                   paymentNumber: _paymentNumberController.text,
                   amount: double.parse(_amountController.text),
-                  issueDate: _selectedIssueDate,
+                  issueDate: _issueDate,
                   status: _statusValue,
-                  statusDate: _selectedStatusDate,
+                  statusDate: _statusDate,
                   isFreezed: _isFreezed,
                 )
                 .whenComplete(

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'models/orders_model.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -37,6 +39,13 @@ class _MyAppState extends State<MyApp> {
         ),
         StreamProvider<List<dynamic>>.value(
           value: _firebaseServices.getProducts,
+          initialData: [],
+          catchError: (context, snapshot) {
+            return [];
+          },
+        ),
+        StreamProvider<List<OrdersModel>>.value(
+          value: _firebaseServices.getOrders,
           initialData: [],
           catchError: (context, snapshot) {
             return [];

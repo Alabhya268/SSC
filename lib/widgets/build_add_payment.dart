@@ -18,8 +18,8 @@ class BuildAddPayment extends StatefulWidget {
 class _BuildAddPaymentState extends State<BuildAddPayment> {
   FirebaseServices _firebaseServices = FirebaseServices();
 
-  DateTime _selectedLatestStatusDate = DateTime.now();
-  DateTime _selectedIssueDate = DateTime.now();
+  DateTime _statusDate = DateTime.now();
+  DateTime _issueDate = DateTime.now();
   String _statusValue = 'Pending';
   List<String> _statusOptions = [
     'Pending',
@@ -85,18 +85,17 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                         initialDate: DateTime.now(),
                         firstDate:
                             DateTime(DateTime.now().year - DateTime(5).year),
-                        lastDate:
-                            DateTime(DateTime.now().year + DateTime(5).year),
+                        lastDate: DateTime.now(),
                       );
                       if (pickedDate != null) {
                         setState(() {
-                          _selectedIssueDate = pickedDate;
+                          _issueDate = pickedDate;
                         });
                       }
                     },
                     icon: Icon(Icons.date_range_outlined,
                         color: kRegularIconColor),
-                    label: Text(DateFormat.yMMMMd().format(_selectedIssueDate),
+                    label: Text(DateFormat.yMMMMd().format(_issueDate),
                         style: kLabelStyle),
                   ),
                 ),
@@ -199,21 +198,19 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                         initialDate: DateTime.now(),
                         firstDate:
                             DateTime(DateTime.now().year - DateTime(5).year),
-                        lastDate:
-                            DateTime(DateTime.now().year + DateTime(5).year),
+                        lastDate: DateTime.now(),
                       );
                       if (pickedDate != null) {
                         setState(
                           () {
-                            _selectedLatestStatusDate = pickedDate;
+                            _statusDate = pickedDate;
                           },
                         );
                       }
                     },
                     icon: Icon(Icons.date_range_outlined,
                         color: kRegularIconColor),
-                    label: Text(
-                        DateFormat.yMMMMd().format(_selectedLatestStatusDate),
+                    label: Text(DateFormat.yMMMMd().format(_statusDate),
                         style: kLabelStyle),
                   ),
                 ),
@@ -243,9 +240,9 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                   name: widget.partiesModel.name,
                   paymentNumber: _paymentNumberController.text,
                   amount: double.parse(_amountController.text),
-                  issueDate: _selectedIssueDate,
+                  issueDate: _issueDate,
                   status: _statusValue,
-                  statusDate: _selectedLatestStatusDate,
+                  statusDate: _statusDate,
                 );
                 _firebaseServices.addToPayment(paymentModel: _paymentModel);
                 Navigator.of(context).pop();

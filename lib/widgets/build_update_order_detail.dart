@@ -7,12 +7,14 @@ import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 
 class BuildUpdateOrderDetail extends StatefulWidget {
+  final double credit;
   final OrdersModel ordersModel;
   final UserModel userModel;
   const BuildUpdateOrderDetail({
     Key? key,
     required this.ordersModel,
     required this.userModel,
+    required this.credit,
   }) : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
   late DateTime _issueDate;
   late String _statusValue;
   late DateTime _statusDate;
+  double _totalOrderAmount = 0;
 
   void initState() {
     _numberOfUnits.text = widget.ordersModel.numberOfUnits.toString();
@@ -184,12 +187,11 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                         initialDate: DateTime.now(),
                         firstDate:
                             DateTime(DateTime.now().year - DateTime(5).year),
-                        lastDate:
-                            DateTime(DateTime.now().year + DateTime(5).year),
+                        lastDate: DateTime.now(),
                       );
                       if (pickedDate != null) {
                         setState(() {
-                          _statusDate = pickedDate;
+                          _issueDate = pickedDate;
                         });
                       }
                     },
@@ -294,8 +296,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                               initialDate: DateTime.now(),
                               firstDate: DateTime(
                                   DateTime.now().year - DateTime(5).year),
-                              lastDate: DateTime(
-                                  DateTime.now().year + DateTime(5).year),
+                              lastDate: DateTime.now(),
                             );
                             if (pickedDate != null) {
                               setState(
@@ -329,8 +330,64 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
             style: kLabelStyle,
           ),
           onPressed: () async {
-            await _firebaseServices
-                .updateOrderDetails(
+            if (_tax.text.isEmpty) {
+              _tax.text = '0';
+            }
+            if (_extraCharges.text.isEmpty) {
+              _extraCharges.text = '0';
+            }
+            if (_numberOfUnits.text.isEmpty || _perUnitAmount.text.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Number of units and Unit amount is required'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            } else {
+              double _principle = double.parse(_perUnitAmount.text) *
+                  double.parse(_numberOfUnits.text);
+              double _taxOnPrinciple = double.parse(_perUnitAmount.text) *
+                  double.parse(_numberOfUnits.text) *
+                  double.parse(_tax.text) *
+                  0.01;
+              _totalOrderAmount = _principle +
+                  _taxOnPrinciple +
+                  double.parse(_extraCharges.text);
+              if (_totalOrderAmount > widget.credit &&
+                  _statusValue == _statusOptions[1]) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      backgroundColor: kRegularColor,
+                      title: Text(
+                        'Error',
+                        style: kLabelStyle,
+                      ),
+                      content: SingleChildScrollView(
+                        child: Text(
+                          'Total amount of order: $_totalOrderAmount \n Remaining credit: ${widget.credit}',
+                          style: kLabelStyle,
+                          overflow: TextOverflow.fade,
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'Ok',
+                            style: kLabelStyle,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              } else {
+                await _firebaseServices
+                    .updateOrderDetails(
                   orderId: widget.ordersModel.id,
                   numberOfUnits: double.parse(_numberOfUnits.text),
                   perUnitAmount: double.parse(_perUnitAmount.text),
@@ -342,10 +399,28 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                   status: _statusValue,
                   statusDate: _statusDate,
                 )
-                .whenComplete(() => Navigator.of(context).pop())
-                .onError(
+                    .whenComplete(() async {
+                  widget.ordersModel.status == _statusOptions.first
+                      ? _statusValue == _statusOptions[1]
+                          ? await _firebaseServices.updateUserOrders(
+                              uid: widget.userModel.uid,
+                              orders: await _firebaseServices
+                                      .getUserOrders(widget.ordersModel.uid) +
+                                  1)
+                          : null
+                      : _statusValue == _statusOptions.first
+                          ? await _firebaseServices.updateUserOrders(
+                              uid: widget.userModel.uid,
+                              orders: await _firebaseServices
+                                      .getUserOrders(widget.ordersModel.uid) -
+                                  1)
+                          : null;
+                  Navigator.of(context).pop();
+                }).onError(
                   (error, stackTrace) => print(error),
                 );
+              }
+            }
           },
         ),
         TextButton(

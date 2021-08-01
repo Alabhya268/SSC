@@ -20,7 +20,7 @@ class PartiesModel {
       : name = data['name'] ?? '',
         location = data['location'] ?? '',
         product = data['product'] ?? '',
-        limit = data['limit'] ?? 0,
+        limit = data['limit'].toDouble() ?? 0,
         registrationDate = (data['registrationDate'] as Timestamp).toDate();
 
   Map<String, dynamic> toJson() {

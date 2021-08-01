@@ -73,17 +73,14 @@ class _PartiesScreenState extends State<PartiesScreen> {
                   height: 30.0,
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: ValueListenableBuilder(
-                      builder:
-                          (BuildContext context, String value, Widget? child) {
-                        return BuildPartyList(
-                          searchField: value,
-                        );
-                      },
-                      valueListenable: _searchParty,
-                    ),
+                  child: ValueListenableBuilder(
+                    builder:
+                        (BuildContext context, String value, Widget? child) {
+                      return BuildPartyList(
+                        searchField: value,
+                      );
+                    },
+                    valueListenable: _searchParty,
                   ),
                 ),
               ],

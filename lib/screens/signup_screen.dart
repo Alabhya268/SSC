@@ -48,7 +48,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
+            data: ThemeData(
+              unselectedWidgetColor: Colors.white,
+            ),
             child: Checkbox(
               value: _showPassword,
               checkColor: Colors.green,
@@ -341,7 +343,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ],
                     ),
-                    if (_selectedRole != _roleOptions[1]) ...[
+                    if (_selectedRole == _roleOptions.first) ...[
                       SizedBox(
                         height: 20,
                       ),

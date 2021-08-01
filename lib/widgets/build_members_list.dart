@@ -1,8 +1,9 @@
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
-import 'package:cheque_app/widgets/build_update_user_details.dart';
+import 'package:cheque_app/widgets/build_update_member_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +49,7 @@ class _BuildMembersListState extends State<BuildMembersList> {
                 decoration: kBoxDecorationStyle,
                 child: ListTile(
                   title: Text(
-                    'Name: ${_user[index].name}',
+                    'Name: ${_user[index].name.capitalizeFirstofEach}',
                     style: kLabelStyle,
                     overflow: TextOverflow.fade,
                   ),
@@ -58,12 +59,6 @@ class _BuildMembersListState extends State<BuildMembersList> {
                       Text(
                         'Role: ${_user[index].role}',
                         style: kLabelStyle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        'Issue date: ${_miscFunctions.formattedDate(_user[index].registerDate)}',
-                        style: kLabelStyle,
-                        textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
@@ -79,7 +74,13 @@ class _BuildMembersListState extends State<BuildMembersList> {
                         style: kLabelStyle,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.fade,
-                      )
+                      ),
+                      Text(
+                        'Total orders: ${_user[index].orders.toString()}',
+                        style: kLabelStyle,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.fade,
+                      ),
                     ],
                   ),
                   trailing: Container(
@@ -94,7 +95,9 @@ class _BuildMembersListState extends State<BuildMembersList> {
                           context: context,
                           barrierDismissible: false,
                           builder: (BuildContext context) {
-                            return BuildUpdateUserDetail(
+                            return BuildUpdateMemberDetail(
+                              canAddParty: _user[index].canAddParty,
+                              products: _user[index].products,
                               role: _user[index].role,
                               uid: _user[index].uid,
                               approved: _user[index].approved,

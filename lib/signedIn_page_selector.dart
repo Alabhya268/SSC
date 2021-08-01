@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/members_list_screen.dart';
 import 'screens/email_verification_screen.dart';
-import 'screens/parties_list_screen.dart';
+import 'screens/parties_screen.dart';
+import 'screens/sales_screen.dart';
 import 'screens/user_approved_screen.dart';
 import 'utilities/constants.dart';
 import 'utilities/extension.dart';
@@ -32,6 +33,8 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
         return EmailVerificationScreen();
       case 3:
         return UserApprovedScreen();
+      case 4:
+        return SalesScreen();
       default:
         return PartiesScreen();
     }
@@ -97,7 +100,7 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
                               Navigator.pop(context);
                             },
                           ),
-                          if (_userModel.role == 'Admin')
+                          if (_userModel.role == 'Admin') ...[
                             ListTile(
                               leading: Icon(Icons.people_alt_outlined),
                               title: Text('Members'),
@@ -108,6 +111,17 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
                                 Navigator.pop(context);
                               },
                             ),
+                            ListTile(
+                              leading: Icon(Icons.shopping_bag),
+                              title: Text('Sales'),
+                              onTap: () {
+                                setState(() {
+                                  screenNumberSignedIn = 4;
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
                           ListTile(
                             leading: Icon(Icons.settings),
                             title: Text('About'),

@@ -26,7 +26,7 @@ class PaymentModel {
       : partyId = data['partyId'] ?? '',
         name = data['name'] ?? '',
         paymentNumber = data['paymentNumber'] ?? '',
-        amount = data['amount'] ?? 0,
+        amount = data['amount'].toDouble() ?? 0,
         issueDate = (data['issueDate'] as Timestamp).toDate(),
         status = data['status'] ?? '',
         statusDate = (data['statusDate'] as Timestamp).toDate(),

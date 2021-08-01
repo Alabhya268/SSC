@@ -41,18 +41,13 @@ class BuildOrderList extends StatelessWidget {
             itemBuilder: (context, index) {
               if (_orders[index].status == _approved ||
                   _orders[index].status == _pending) {
-                double _principleAmount =
-                    _orders[index].perUnitAmount * _orders[index].numberOfUnits;
-                double _totalAmount = _orders[index].extraCharges +
-                    _principleAmount +
-                    (_principleAmount * _orders[index].tax);
                 return Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(bottom: 10.0),
                   decoration: kBoxDecorationStyle,
                   child: ListTile(
                     title: Text(
-                      'Amount: $_totalAmount',
+                      'Amount: ${_orders[index].totalOrder}',
                       style: kLabelStyle,
                       overflow: TextOverflow.fade,
                     ),
