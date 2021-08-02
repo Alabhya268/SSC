@@ -1,5 +1,6 @@
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:cheque_app/widgets/build_select_products.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,7 @@ class BuildUpdateMemberDetail extends StatefulWidget {
   final String role;
   final String uid;
   final bool approved;
+  final int orders;
   const BuildUpdateMemberDetail({
     Key? key,
     required this.role,
@@ -16,6 +18,7 @@ class BuildUpdateMemberDetail extends StatefulWidget {
     required this.approved,
     required this.products,
     required this.canAddParty,
+    required this.orders,
   }) : super(key: key);
 
   @override
@@ -26,6 +29,7 @@ class BuildUpdateMemberDetail extends StatefulWidget {
 class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
   BuildSelectProducts _buildSelectProducts = BuildSelectProducts();
   FirebaseServices _firebaseServices = FirebaseServices();
+  TextEditingController _orderController = TextEditingController();
   late String _role;
   late bool _approved;
   late bool _canAddParty;
@@ -41,6 +45,7 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
     _selectedProducts = widget.products;
     _buildSelectProducts.selectedProducts = _selectedProducts;
     _canAddParty = widget.canAddParty;
+    _orderController.text = widget.orders.toString();
     super.initState();
   }
 
@@ -280,6 +285,23 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
                 ),
               ],
             ),
+            SizedBox(
+              height: 30,
+            ),
+            BuildInput(
+              fieldName: 'Orders',
+              hintText: 'Number of orders',
+              controller: _orderController,
+              textInputType: TextInputType.number,
+              passwordfield: false,
+              icon: Icon(
+                Icons.format_list_numbered,
+                color: Colors.black45,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),
@@ -306,6 +328,7 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
                       uid: widget.uid,
                       approved: _approved,
                       role: _role,
+                      orders: int.parse(_orderController.text),
                     )
                     .whenComplete(() => Navigator.of(context).pop())
                     .onError((error, stackTrace) => print(error));

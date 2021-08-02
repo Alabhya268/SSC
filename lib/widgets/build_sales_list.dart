@@ -1,7 +1,5 @@
 import 'package:cheque_app/models/orders_model.dart';
-import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
-import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,19 +20,20 @@ class BuildSalesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseServices _firebaseServices = FirebaseServices();
     _orders = Provider.of<List<OrdersModel>>(context)
         .where((element) =>
-            element.issueDate.isBefore(endDate) &&
+            element.issueDate.isBefore(
+                DateTime(endDate.year, endDate.month, endDate.day + 1)) &&
             element.issueDate.isAfter(startDate) &&
             element.status == 'Approved')
         .toList();
 
     _orders.forEach((element) {
       if (!_sales.containsKey(element.product)) {
-        _sales[element.product] = 1;
+        _sales[element.product] = element.numberOfUnits;
       } else {
-        _sales[element.product] += 1;
+        _sales[element.product] =
+            _sales[element.product] + element.numberOfUnits;
       }
     });
 
@@ -52,12 +51,12 @@ class BuildSalesList extends StatelessWidget {
                 decoration: kBoxDecorationStyle,
                 child: ListTile(
                   title: Text(
-                    'Amount: ${_salesList[index].keys.first}',
+                    'Product: ${_salesList[index].keys.first}',
                     style: kLabelStyle,
                     overflow: TextOverflow.fade,
                   ),
                   subtitle: Text(
-                    'Status: ${_salesList[index].values.first}',
+                    'Units ordered: ${_salesList[index].values.first}',
                     style: kLabelStyle,
                     overflow: TextOverflow.ellipsis,
                   ),

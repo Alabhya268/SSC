@@ -8,8 +8,14 @@ final kHintTextStyle = TextStyle(
 );
 
 final kLabelStyle = TextStyle(
-  color: Colors.white,
   fontWeight: FontWeight.bold,
+  color: Colors.white,
+  fontFamily: 'OpenSans',
+);
+
+final kErrorStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: Colors.red,
   fontFamily: 'OpenSans',
 );
 

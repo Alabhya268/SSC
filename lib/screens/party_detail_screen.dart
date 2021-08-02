@@ -8,6 +8,7 @@ import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
+import 'package:cheque_app/widgets/build_update_party_limit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -95,17 +96,17 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
           List<PaymentModel> _paymentList =
               Provider.of<List<PaymentModel>>(context);
           double _totalPayment = 0;
-          double _totalOutStanding = 0;
+          double _totalOrder = 0;
           _paymentList.forEach((element) {
             if (element.status == 'Approved')
               _totalPayment = _totalPayment + element.amount;
           });
           _orderList.forEach((element) {
             if (element.status == 'Approved')
-              _totalOutStanding = _totalOutStanding + element.totalOrder;
+              _totalOrder = _totalOrder + element.totalOrder;
           });
-          double _credit =
-              _partiesModel.limit - _totalOutStanding + _totalPayment;
+          double _totalOutStanding = _totalOrder - _totalPayment;
+          double _credit = _partiesModel.limit - _totalOutStanding;
           return Stack(
             children: <Widget>[
               Container(
@@ -232,6 +233,23 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
+                                trailing: IconButton(
+                                  color: Colors.black45,
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return BuildPartyLimit(
+                                          partyId: _partiesModel.id,
+                                          limit: _partiesModel.limit,
+                                          totalOutStanding: _totalOutStanding,
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
                               ListTile(
                                 title: Text(
@@ -240,7 +258,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '$_totalPayment',
+                                  '$_totalOutStanding',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),

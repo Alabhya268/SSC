@@ -1,4 +1,3 @@
-import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:cheque_app/widgets/build_sales_list.dart';
@@ -12,7 +11,6 @@ class SalesScreen extends StatefulWidget {
 }
 
 class _SalesScreenState extends State<SalesScreen> {
-  FirebaseServices _firebaseServices = FirebaseServices();
   MiscFunctions _miscFunctions = MiscFunctions();
   DateTime _startDate = DateTime(
       DateTime.now().year, DateTime.now().month - 1, DateTime.now().day);

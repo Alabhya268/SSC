@@ -16,7 +16,7 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   FirebaseServices _firebaseServices = FirebaseServices();
 
-  void initState(){
+  void initState() {
     super.initState();
   }
 

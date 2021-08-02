@@ -407,6 +407,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                               orders: await _firebaseServices
                                       .getUserOrders(widget.ordersModel.uid) +
                                   1)
+                          // ignore: unnecessary_statements
                           : null
                       : _statusValue == _statusOptions.first
                           ? await _firebaseServices.updateUserOrders(
@@ -414,6 +415,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                               orders: await _firebaseServices
                                       .getUserOrders(widget.ordersModel.uid) -
                                   1)
+                          // ignore: unnecessary_statements
                           : null;
                   Navigator.of(context).pop();
                 }).onError(

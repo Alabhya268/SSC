@@ -129,18 +129,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     List<PaymentModel> _paymentList =
                         Provider.of<List<PaymentModel>>(context);
                     double _totalPayment = 0;
-                    double _totalOutStanding = 0;
+                    double _totalOrder = 0;
                     _paymentList.forEach((element) {
                       if (element.status == 'Approved')
                         _totalPayment = _totalPayment + element.amount;
                     });
                     _orderList.forEach((element) {
                       if (element.status == 'Approved')
-                        _totalOutStanding =
-                            _totalOutStanding + element.totalOrder;
+                        _totalOrder = _totalOrder + element.totalOrder;
                     });
-                    double _credit =
-                        _partiesModel.limit - _totalOutStanding + _totalPayment;
+                    double _totalOutStanding = _totalOrder - _totalPayment;
+                    double _credit = _partiesModel.limit - _totalOutStanding;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[

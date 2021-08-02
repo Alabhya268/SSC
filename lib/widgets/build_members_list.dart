@@ -2,7 +2,6 @@ import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/utilities/extension.dart';
-import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:cheque_app/widgets/build_update_member_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +16,6 @@ class BuildMembersList extends StatefulWidget {
 
 class _BuildMembersListState extends State<BuildMembersList> {
   FirebaseServices _firebaseServices = FirebaseServices();
-
-  MiscFunctions _miscFunctions = MiscFunctions();
 
   List<UserModel> _user = [];
 
@@ -101,6 +98,7 @@ class _BuildMembersListState extends State<BuildMembersList> {
                               role: _user[index].role,
                               uid: _user[index].uid,
                               approved: _user[index].approved,
+                              orders: _user[index].orders,
                             );
                           },
                         );

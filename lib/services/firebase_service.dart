@@ -234,14 +234,24 @@ class FirebaseServices {
     required String uid,
     required bool approved,
     required String role,
+    required int orders,
   }) async {
     usersRef.doc(uid).update({
       'canAddParty': canAddParty,
       'products': products,
       'approved': approved,
-      'role': role
+      'role': role,
+      'orders': orders,
     }).onError((error, stackTrace) => print(
         ' Error from firebase Service in method updateUserDetails: $error'));
+  }
+
+  Future<void> updatePartyLimit(
+      {required String partyId, required double limit}) async {
+    partiesRef.doc(partyId).update({
+      'limit': limit,
+    }).onError((error, stackTrace) => print(
+        ' Error from firebase Service in method updatePartyLimit: $error'));
   }
 
   Future<void> addToParty({
