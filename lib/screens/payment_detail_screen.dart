@@ -89,6 +89,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                     issueDate: widget.paymentModel.issueDate,
                     status: widget.paymentModel.status,
                     statusDate: widget.paymentModel.statusDate,
+                    product: widget.paymentModel.product,
                   ),
                   builder: (context, snapshots) {
                     PaymentModel _paymentModel =

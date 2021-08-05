@@ -39,6 +39,7 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
   ];
   List<dynamic> _selectedProducts = [];
 
+  @override
   void initState() {
     _role = widget.role;
     _approved = widget.approved;

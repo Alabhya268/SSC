@@ -16,10 +16,6 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   FirebaseServices _firebaseServices = FirebaseServices();
 
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     var _user = Provider.of<User?>(context);

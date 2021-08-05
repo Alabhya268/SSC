@@ -44,13 +44,6 @@ class _MyAppState extends State<MyApp> {
             return [];
           },
         ),
-        StreamProvider<List<OrdersModel>>.value(
-          value: _firebaseServices.getOrders,
-          initialData: [],
-          catchError: (context, snapshot) {
-            return [];
-          },
-        ),
       ],
       child: MaterialApp(
         title: 'SSC',

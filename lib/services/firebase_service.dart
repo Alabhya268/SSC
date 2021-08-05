@@ -26,7 +26,7 @@ class FirebaseServices {
   final CollectionReference ordersRef =
       FirebaseFirestore.instance.collection("orders");
   final CollectionReference productListRef =
-      FirebaseFirestore.instance.collection("productList");
+      FirebaseFirestore.instance.collection("products");
 
   Future<int> getUserOrders(String uid) => usersRef.doc(uid).get().then((user) {
         return UserModel.fromData(user.data() as Map<String, dynamic>).orders;
@@ -156,11 +156,18 @@ class FirebaseServices {
           .first
           .productList);
 
-  Stream<List<OrdersModel>> get getOrders =>
-      ordersRef.snapshots().map((value) => value.docs
-          .map((orders) =>
-              OrdersModel.fromData(orders.data() as Map<String, dynamic>))
-          .toList());
+  Stream<List<OrdersModel>> getOrdersInTimeRange(
+          {required DateTime startDate, required DateTime endDate}) =>
+      ordersRef
+          .where('issueDate', isGreaterThanOrEqualTo: startDate)
+          .snapshots()
+          .map((event) => event.docs
+              .map((_orders) =>
+                  OrdersModel.fromData(_orders.data() as Map<String, dynamic>))
+              .where((_order) => (_order.issueDate.isBefore(
+                      DateTime(endDate.year, endDate.month, endDate.day + 1)) &&
+                  _order.status == "Approved"))
+              .toList());
 
   Stream<bool> get getUserApproved => usersRef
       .doc(getCurrentUserId())
@@ -171,6 +178,10 @@ class FirebaseServices {
       .doc(getCurrentUserId())
       .snapshots()
       .map((DocumentSnapshot<Object?> document) => document['role']);
+
+  Future<String> getProductRefId() {
+    return productListRef.get().then((event) => event.docs.first.id);
+  }
 
   Future<void> updateUserOrders({
     required String uid,
@@ -228,6 +239,13 @@ class FirebaseServices {
         ' Error from firebase Service in method updateOrderDetails: $error'));
   }
 
+  Future<void> updateProductList({required List<dynamic> product}) async {
+    await productListRef
+        .doc(await getProductRefId())
+        .set({'productList': product}).onError((error, stackTrace) => print(
+            'Error from firebase Service in method updateUserDetails: $error'));
+  }
+
   Future<void> updateUserDetails({
     required bool canAddParty,
     required List<dynamic> products,
@@ -243,7 +261,7 @@ class FirebaseServices {
       'role': role,
       'orders': orders,
     }).onError((error, stackTrace) => print(
-        ' Error from firebase Service in method updateUserDetails: $error'));
+        'Error from firebase Service in method updateUserDetails: $error'));
   }
 
   Future<void> updatePartyLimit(

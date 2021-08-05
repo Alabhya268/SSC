@@ -1,4 +1,5 @@
 import 'package:cheque_app/models/user_model.dart';
+import 'package:cheque_app/screens/products_screen.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
         return UserApprovedScreen();
       case 4:
         return SalesScreen();
+      case 5:
+        return ProductListScreen();
       default:
         return PartiesScreen();
     }
@@ -117,6 +120,16 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
                               onTap: () {
                                 setState(() {
                                   screenNumberSignedIn = 4;
+                                });
+                                Navigator.pop(context);
+                              },
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.shopping_bag),
+                              title: Text('Products'),
+                              onTap: () {
+                                setState(() {
+                                  screenNumberSignedIn = 5;
                                 });
                                 Navigator.pop(context);
                               },

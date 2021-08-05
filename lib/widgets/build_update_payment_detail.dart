@@ -29,6 +29,7 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
   late bool _isFreezed;
   late String _statusValue;
 
+  @override
   void initState() {
     _statusDate = widget.paymentModel.statusDate;
     _issueDate = widget.paymentModel.issueDate;

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "117523481276",
-    "project_id": "ssq-chq",
-    "storage_bucket": "ssq-chq.appspot.com"
+    "project_number": "1003251619361",
+    "project_id": "ssc-app-5ebb9",
+    "storage_bucket": "ssc-app-5ebb9.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:117523481276:android:a288bdd92c8a28870246b9",
+        "mobilesdk_app_id": "1:1003251619361:android:51086abf81b1978c817560",
         "android_client_info": {
           "package_name": "com.example.cheque_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "117523481276-svgskrmq093dvqqrd1trmn7mrrp92e3d.apps.googleusercontent.com",
+          "client_id": "1003251619361-p4rujt5qkodhvo0un3r2ak0fa9qatgf6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBdBOA-123xDmClgwQWphaX7klXpuWn0Vw"
+          "current_key": "AIzaSyDE9zEd9f5fsizwc9nfhTxSZyd54ohsCHk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "117523481276-svgskrmq093dvqqrd1trmn7mrrp92e3d.apps.googleusercontent.com",
+              "client_id": "1003251619361-p4rujt5qkodhvo0un3r2ak0fa9qatgf6.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

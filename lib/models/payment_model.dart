@@ -8,6 +8,7 @@ class PaymentModel {
   late double amount;
   late DateTime issueDate;
   late String status;
+  late String product;
   late DateTime statusDate;
   bool isFreezed = false;
 
@@ -20,6 +21,7 @@ class PaymentModel {
     required this.issueDate,
     required this.status,
     required this.statusDate,
+    required this.product,
   });
 
   PaymentModel.fromData(Map<String, dynamic> data)
@@ -30,6 +32,7 @@ class PaymentModel {
         issueDate = (data['issueDate'] as Timestamp).toDate(),
         status = data['status'] ?? '',
         statusDate = (data['statusDate'] as Timestamp).toDate(),
+        product = data['product'] ?? '',
         isFreezed = data['isFreezed'] ?? false;
 
   Map<String, dynamic> toJson() {
@@ -41,6 +44,7 @@ class PaymentModel {
       'issueDate': issueDate,
       'status': status,
       'statusDate': statusDate,
+      'product': product,
       'isFreezed': isFreezed,
     };
   }

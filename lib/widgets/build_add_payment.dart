@@ -196,8 +196,9 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                       var pickedDate = await showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
-                        firstDate:
-                            DateTime(DateTime.now().year - DateTime(5).year),
+                        firstDate: DateTime(
+                          DateTime.now().year - DateTime(5).year,
+                        ),
                         lastDate: DateTime.now(),
                       );
                       if (pickedDate != null) {
@@ -213,6 +214,9 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                     label: Text(DateFormat.yMMMMd().format(_statusDate),
                         style: kLabelStyle),
                   ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
               ],
             ),
@@ -243,6 +247,7 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                   issueDate: _issueDate,
                   status: _statusValue,
                   statusDate: _statusDate,
+                  product: widget.partiesModel.product,
                 );
                 _firebaseServices.addToPayment(paymentModel: _paymentModel);
                 Navigator.of(context).pop();

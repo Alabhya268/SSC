@@ -86,7 +86,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _emailController.text == '' ||
                     _passwordController.text == '' ||
                     _confirmPasswordController.text == '' ||
-                    _selectedProducts.isEmpty) {
+                    (_selectedProducts.isEmpty &&
+                        _selectedRole == _roleOptions.first)) {
                   setState(() {
                     _isLoading = false;
                   });
@@ -203,6 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  @override
   void initState() {
     _selectedRole = _roleOptions.first;
     super.initState();

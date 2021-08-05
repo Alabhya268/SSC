@@ -35,6 +35,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
   late DateTime _statusDate;
   double _totalOrderAmount = 0;
 
+  @override
   void initState() {
     _numberOfUnits.text = widget.ordersModel.numberOfUnits.toString();
     _perUnitAmount.text = widget.ordersModel.perUnitAmount.toString();
