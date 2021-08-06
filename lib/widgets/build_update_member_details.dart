@@ -1,6 +1,7 @@
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
+import 'package:cheque_app/widgets/build_error_dialog.dart';
 import 'package:cheque_app/widgets/build_select_products.dart';
 import 'package:flutter/material.dart';
 
@@ -92,7 +93,7 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
                         value: _role,
                         icon: const Icon(
                           Icons.arrow_drop_down,
-                          color: Colors.black45,
+                          color: kRegularIconColor,
                         ),
                         iconSize: 24,
                         elevation: 16,
@@ -314,12 +315,15 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
             ),
             onPressed: () async {
               if (_selectedProducts.isEmpty && _role == _roleOptions.first) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                        'Atleast one product need to be selected for sales role'),
-                    duration: Duration(seconds: 2),
-                  ),
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return BuildErrorDialog(
+                        title: 'Alert!',
+                        errorMessage:
+                            'Atleast one product need to be selected for sales role');
+                  },
                 );
               } else {
                 await _firebaseServices

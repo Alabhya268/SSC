@@ -2,6 +2,7 @@ import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
+import 'package:cheque_app/widgets/build_error_dialog.dart';
 import 'package:flutter/material.dart';
 
 class BuildAddParty extends StatefulWidget {
@@ -33,34 +34,10 @@ class _BuildAddPartyState extends State<BuildAddParty> {
   @override
   Widget build(BuildContext context) {
     return widget.productList.isEmpty
-        ? AlertDialog(
-            backgroundColor: kRegularColor,
-            title: Text(
-              'Alert!',
-              style: kLabelStyle,
-            ),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: [
-                  Text(
-                    'No products exist yet, products need to be added before adding party',
-                    style: kLabelStyle,
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                child: Text(
-                  'Cancel',
-                  style: kLabelStyle,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          )
+        ? BuildErrorDialog(
+            title: 'Alert',
+            errorMessage:
+                'No products exist yet, products need to be added before adding party')
         : AlertDialog(
             backgroundColor: kRegularColor,
             title: Text(

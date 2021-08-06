@@ -139,8 +139,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           .whenComplete(() {
                         setState(() {
                           _isLoading = false;
+                          Navigator.pop(context);
                         });
-                        Navigator.pop(context);
                       });
                       if (_error != '') {
                         setState(() {

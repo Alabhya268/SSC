@@ -29,12 +29,12 @@ class _BuildMembersListState extends State<BuildMembersList> {
       initialData: [],
       builder: (context, snapshots) {
         _user = Provider.of<List<UserModel>>(context);
-        _user
+        _user = _user
             .where((element) =>
                 element.approved == _approved ||
                 element.approved == _notApproved)
-            .toList()
-            .sort((a, b) => b.registerDate.compareTo(a.registerDate));
+            .toList();
+        _user.sort((a, b) => b.registerDate.compareTo(a.registerDate));
         if (_user.isNotEmpty) {
           return ListView.builder(
             shrinkWrap: true,

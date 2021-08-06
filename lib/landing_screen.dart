@@ -21,11 +21,9 @@ class _LandingScreenState extends State<LandingScreen> {
     var _user = Provider.of<User?>(context);
     bool _signedIn = _user != null;
     late Stream<bool> userApproved;
-    late Stream<String> role;
 
     if (_signedIn) {
       userApproved = _firebaseServices.getUserApproved;
-      role = _firebaseServices.getUserRole;
     }
 
     return _signedIn
@@ -37,7 +35,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   name: '',
                   email: '',
                   role: '',
-                  products: [],
+                  products: [''],
                   registerDate: DateTime.now(),
                   canAddParty: false,
                   canEditOrderStatus: false,
@@ -47,10 +45,6 @@ class _LandingScreenState extends State<LandingScreen> {
               StreamProvider<bool>.value(
                 value: userApproved,
                 initialData: true,
-              ),
-              StreamProvider<String>.value(
-                value: role,
-                initialData: '',
               ),
             ],
             child: SignInPageSelector(),

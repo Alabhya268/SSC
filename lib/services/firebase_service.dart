@@ -122,9 +122,31 @@ class FirebaseServices {
         );
   }
 
-  Stream<List<PartiesModel>> searchParties(String searchField) {
+  Stream<List<PartiesModel>> searchParties(
+      {required String searchField, DocumentSnapshot<Object?>? doc}) {
     PartiesModel _partiesModel;
     return partiesRef
+        .orderBy('name')
+        .startAt([searchField])
+        .endAt(['$searchField\uf8ff'])
+        .snapshots()
+        .map(
+          (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(
+            (party) {
+              _partiesModel =
+                  PartiesModel.fromData(party.data() as Map<String, dynamic>);
+              _partiesModel.id = party.id;
+              return _partiesModel;
+            },
+          ).toList(),
+        );
+  }
+
+  Stream<List<PartiesModel>> searchPartiesSales(
+      {required String searchField, required List<dynamic> products}) {
+    PartiesModel _partiesModel;
+    return partiesRef
+        .where('product', whereIn: products)
         .orderBy('name')
         .startAt([searchField])
         .endAt(['$searchField\uf8ff'])
@@ -211,11 +233,6 @@ class FirebaseServices {
       .doc(getCurrentUserId())
       .snapshots()
       .map((DocumentSnapshot<Object?> document) => document['approved']);
-
-  Stream<String> get getUserRole => usersRef
-      .doc(getCurrentUserId())
-      .snapshots()
-      .map((DocumentSnapshot<Object?> document) => document['role']);
 
   Future<String> getProductRefId() {
     return productListRef.get().then((event) => event.docs.first.id);

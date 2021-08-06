@@ -8,25 +8,24 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cheque_app/utilities/extension.dart';
 
-// ignore: must_be_immutable
 class BuildPartyList extends StatelessWidget {
   final FirebaseServices _firebaseServices = FirebaseServices();
   final MiscFunctions _miscFunctions = MiscFunctions();
-  String searchField = '';
-  BuildPartyList({Key? key, this.searchField = ''}) : super(key: key);
+  final String searchField;
+  BuildPartyList({Key? key, required this.searchField}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);
     return StreamProvider<List<PartiesModel>>.value(
-      value: _firebaseServices.searchParties(searchField),
+      value: _userModel.role == 'Sales' || _userModel.role == ''
+          ? _firebaseServices.searchPartiesSales(
+              searchField: searchField, products: _userModel.products)
+          : _firebaseServices.searchParties(searchField: searchField),
       initialData: [],
       builder: (context, snapshots) {
-        List<PartiesModel> _parties = _userModel.role != 'Sales'
-            ? Provider.of<List<PartiesModel>>(context)
-            : Provider.of<List<PartiesModel>>(context).where((element) {
-                return _userModel.products.contains(element.product);
-              }).toList();
+        List<PartiesModel> _parties = [];
+        _parties.addAll(Provider.of<List<PartiesModel>>(context));
         if (_parties.isNotEmpty)
           return ListView.builder(
             shrinkWrap: true,
