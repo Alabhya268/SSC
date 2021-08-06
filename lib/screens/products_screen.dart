@@ -1,4 +1,3 @@
-import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:cheque_app/widgets/build_add_product.dart';
 import 'package:cheque_app/widgets/build_product_list.dart';
@@ -13,7 +12,6 @@ class ProductListScreen extends StatefulWidget {
 }
 
 class _ProductListScreenState extends State<ProductListScreen> {
-  FirebaseServices _firebaseServices = FirebaseServices();
   @override
   Widget build(BuildContext context) {
     List<dynamic> _products = Provider.of<List<dynamic>>(context);

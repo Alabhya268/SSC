@@ -69,7 +69,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: MultiProvider(
                   providers: [
                     StreamProvider<List<PaymentModel>>.value(
-                      value: _firebaseServices.getPartyPayments(
+                      value: _firebaseServices.getApprovedPartyPayments(
                           partyId: _partiesModel.id),
                       initialData: [],
                       catchError: (context, snapshot) {
@@ -77,7 +77,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       },
                     ),
                     StreamProvider<List<OrdersModel>>.value(
-                      value: _firebaseServices.getPartyOrders(
+                      value: _firebaseServices.getApprovedPartyOrders(
                           partyId: _partiesModel.id),
                       initialData: [],
                     ),
@@ -131,12 +131,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     double _totalPayment = 0;
                     double _totalOrder = 0;
                     _paymentList.forEach((element) {
-                      if (element.status == 'Approved')
-                        _totalPayment = _totalPayment + element.amount;
+                      _totalPayment = _totalPayment + element.amount;
                     });
                     _orderList.forEach((element) {
-                      if (element.status == 'Approved')
-                        _totalOrder = _totalOrder + element.totalOrder;
+                      _totalOrder = _totalOrder + element.totalOrder;
                     });
                     double _totalOutStanding = _totalOrder - _totalPayment;
                     double _credit = _partiesModel.limit - _totalOutStanding;

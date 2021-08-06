@@ -68,10 +68,47 @@ class FirebaseServices {
         );
   }
 
+  Stream<List<OrdersModel>> getApprovedPartyOrders({required String partyId}) {
+    OrdersModel _ordersModel;
+    return ordersRef
+        .where('partyId', isEqualTo: partyId)
+        .where('status', isEqualTo: 'Approved')
+        .orderBy('issueDate', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot<Object?> querySnapshot) =>
+              querySnapshot.docs.map((order) {
+            _ordersModel =
+                OrdersModel.fromData(order.data() as Map<String, dynamic>);
+            _ordersModel.id = order.id;
+            return _ordersModel;
+          }).toList(),
+        );
+  }
+
   Stream<List<PaymentModel>> getPartyPayments({required String partyId}) {
     PaymentModel _paymentModel;
     return paymentsRef
         .where('partyId', isEqualTo: partyId)
+        .orderBy('issueDate', descending: true)
+        .snapshots()
+        .map(
+          (QuerySnapshot<Object?> querySnapshot) =>
+              querySnapshot.docs.map((payment) {
+            _paymentModel =
+                PaymentModel.fromData(payment.data() as Map<String, dynamic>);
+            _paymentModel.id = payment.id;
+            return _paymentModel;
+          }).toList(),
+        );
+  }
+
+  Stream<List<PaymentModel>> getApprovedPartyPayments(
+      {required String partyId}) {
+    PaymentModel _paymentModel;
+    return paymentsRef
+        .where('partyId', isEqualTo: partyId)
+        .where('status', isEqualTo: 'Approved')
         .orderBy('issueDate', descending: true)
         .snapshots()
         .map(
@@ -160,13 +197,14 @@ class FirebaseServices {
           {required DateTime startDate, required DateTime endDate}) =>
       ordersRef
           .where('issueDate', isGreaterThanOrEqualTo: startDate)
+          .where('issueDate',
+              isLessThanOrEqualTo:
+                  DateTime(endDate.year, endDate.month, endDate.day + 1))
+          .where('status', isEqualTo: 'Approved')
           .snapshots()
           .map((event) => event.docs
               .map((_orders) =>
                   OrdersModel.fromData(_orders.data() as Map<String, dynamic>))
-              .where((_order) => (_order.issueDate.isBefore(
-                      DateTime(endDate.year, endDate.month, endDate.day + 1)) &&
-                  _order.status == "Approved"))
               .toList());
 
   Stream<bool> get getUserApproved => usersRef

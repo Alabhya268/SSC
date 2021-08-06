@@ -54,7 +54,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
       body: MultiProvider(
         providers: [
           StreamProvider<List<PaymentModel>>.value(
-            value: _firebaseServices.getPartyPayments(
+            value: _firebaseServices.getApprovedPartyPayments(
                 partyId: widget.partiesModel.id),
             initialData: [],
             catchError: (context, snapshot) {
@@ -62,7 +62,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
             },
           ),
           StreamProvider<List<OrdersModel>>.value(
-            value: _firebaseServices.getPartyOrders(
+            value: _firebaseServices.getApprovedPartyOrders(
                 partyId: widget.partiesModel.id),
             initialData: [],
             catchError: (context, snapshot) {
@@ -91,19 +91,17 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
         ],
         builder: (context, widget) {
           PartiesModel _partiesModel = Provider.of<PartiesModel>(context);
-          List<OrdersModel> _orderList =
+          List<OrdersModel> _approvedOrderList =
               Provider.of<List<OrdersModel>>(context);
-          List<PaymentModel> _paymentList =
+          List<PaymentModel> _approvedPaymentList =
               Provider.of<List<PaymentModel>>(context);
           double _totalPayment = 0;
           double _totalOrder = 0;
-          _paymentList.forEach((element) {
-            if (element.status == 'Approved')
-              _totalPayment = _totalPayment + element.amount;
+          _approvedPaymentList.forEach((element) {
+            _totalPayment = _totalPayment + element.amount;
           });
-          _orderList.forEach((element) {
-            if (element.status == 'Approved')
-              _totalOrder = _totalOrder + element.totalOrder;
+          _approvedOrderList.forEach((element) {
+            _totalOrder = _totalOrder + element.totalOrder;
           });
           double _totalOutStanding = _totalOrder - _totalPayment;
           double _credit = _partiesModel.limit - _totalOutStanding;
