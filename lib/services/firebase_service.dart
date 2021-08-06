@@ -39,7 +39,7 @@ class FirebaseServices {
 
   Stream<List<UserModel>> getUsers() {
     UserModel _userModel;
-    return usersRef.orderBy('registerDate', descending: true).snapshots().map(
+    return usersRef.where('role', isNotEqualTo: 'Admin').snapshots().map(
           (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(
             (user) {
               _userModel =

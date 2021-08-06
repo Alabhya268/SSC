@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-final kRegularColor = Color(0xFF6CA8F1);
+const kRegularColor = Color(0xFF6CA8F1);
+
+const kRegularIconColor = Colors.black45;
 
 final kHintTextStyle = TextStyle(
   color: Colors.white54,
@@ -89,5 +91,3 @@ final kButtonStyle = ElevatedButton.styleFrom(
     borderRadius: BorderRadius.circular(30.0),
   ),
 );
-
-final kRegularIconColor = Colors.black45;

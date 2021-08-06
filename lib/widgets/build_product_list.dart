@@ -24,48 +24,52 @@ class BuildProductList extends StatelessWidget {
                     style: kLabelStyle,
                     overflow: TextOverflow.fade,
                   ),
-                  onLongPress: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: kRegularColor,
-                          title: Text(
-                            'Alert Dialog',
-                            style: kLabelStyle,
-                          ),
-                          content: Text(
-                            'Do you want to delete this product ?',
-                            style: kLabelStyle,
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                products.remove(products[index]);
-                                _firebaseServices
-                                    .updateProductList(product: products)
-                                    .whenComplete(
-                                        () => Navigator.of(context).pop());
-                              },
-                              child: Text(
-                                'Yes',
-                                style: kLabelStyle,
-                              ),
+                  trailing: IconButton(
+                    icon: Icon(Icons.remove_circle_outline,
+                        color: kRegularIconColor),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: kRegularColor,
+                            title: Text(
+                              'Alert Dialog',
+                              style: kLabelStyle,
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(
-                                'No',
-                                style: kLabelStyle,
-                              ),
+                            content: Text(
+                              'Do you want to delete this product ?',
+                              style: kLabelStyle,
                             ),
-                          ],
-                        );
-                      },
-                    );
-                  },
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  products.remove(products[index]);
+                                  _firebaseServices
+                                      .updateProductList(product: products)
+                                      .whenComplete(
+                                          () => Navigator.of(context).pop());
+                                },
+                                child: Text(
+                                  'Yes',
+                                  style: kLabelStyle,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'No',
+                                  style: kLabelStyle,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               );
             },

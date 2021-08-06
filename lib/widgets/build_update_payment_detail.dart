@@ -159,7 +159,7 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                         value: _statusValue,
                         icon: const Icon(
                           Icons.arrow_drop_down,
-                          color: Colors.black45,
+                          color: kRegularIconColor,
                         ),
                         iconSize: 24,
                         elevation: 16,

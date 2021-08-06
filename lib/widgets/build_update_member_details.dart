@@ -297,7 +297,7 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
               passwordfield: false,
               icon: Icon(
                 Icons.format_list_numbered,
-                color: Colors.black45,
+                color: kRegularIconColor,
               ),
             ),
             SizedBox(

@@ -231,23 +231,26 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                trailing: IconButton(
-                                  color: Colors.black45,
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return BuildPartyLimit(
-                                          partyId: _partiesModel.id,
-                                          limit: _partiesModel.limit,
-                                          totalOutStanding: _totalOutStanding,
-                                        );
-                                      },
-                                    );
-                                  },
-                                ),
+                                trailing: _userModel.role == 'Admin'
+                                    ? IconButton(
+                                        color: kRegularIconColor,
+                                        icon: Icon(Icons.edit),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (BuildContext context) {
+                                              return BuildPartyLimit(
+                                                partyId: _partiesModel.id,
+                                                limit: _partiesModel.limit,
+                                                totalOutStanding:
+                                                    _totalOutStanding,
+                                              );
+                                            },
+                                          );
+                                        },
+                                      )
+                                    : null,
                               ),
                               ListTile(
                                 title: Text(
