@@ -14,11 +14,19 @@ class PartiesScreen extends StatefulWidget {
 }
 
 class _PartiesScreenState extends State<PartiesScreen> {
+  late String _search;
+  TextEditingController _searchParty = TextEditingController();
+
+  @override
+  void initState() {
+    _search = _searchParty.text;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);
     List<dynamic> _products = Provider.of<List<dynamic>>(context);
-    ValueNotifier<String> _searchParty = ValueNotifier<String>('');
 
     return Stack(
       children: <Widget>[
@@ -50,39 +58,52 @@ class _PartiesScreenState extends State<PartiesScreen> {
                   alignment: Alignment.centerLeft,
                   decoration: kBoxDecorationStyle,
                   height: 60.0,
-                  child: TextFormField(
-                    keyboardType: TextInputType.name,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'OpenSans',
-                    ),
-                    onChanged: (value) {
-                      _searchParty.value = value;
-                    },
-                    textInputAction: TextInputAction.next,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(top: 14.0),
-                      prefixIcon: Icon(Icons.person_outline),
-                      hintText: 'Enter party name',
-                      hintStyle: kHintTextStyle,
-                    ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _searchParty,
+                          keyboardType: TextInputType.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'OpenSans',
+                          ),
+                          onFieldSubmitted: (value) {
+                            setState(() {
+                              _search = value;
+                            });
+                          },
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(top: 14.0),
+                            prefixIcon: Icon(Icons.person_outline),
+                            hintText: 'Enter party name',
+                            hintStyle: kHintTextStyle,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _search = _searchParty.text;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.search,
+                          color: kRegularIconColor,
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 SizedBox(
                   height: 30.0,
                 ),
                 Expanded(
-                  child: ValueListenableBuilder(
-                    builder:
-                        (BuildContext context, String value, Widget? child) {
-                      return BuildPartyList(
-                        searchField: value,
-                      );
-                    },
-                    valueListenable: _searchParty,
-                  ),
-                ),
+                    child: BuildPartyList(
+                  searchField: _search,
+                )),
               ],
             ),
           ),
