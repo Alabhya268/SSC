@@ -163,19 +163,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
                             child: Row(
                               children: [
                                 Checkbox(
-                                    value: _isApproved,
-                                    checkColor: Colors.green,
-                                    activeColor: Colors.white,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _isApproved = value as bool;
-                                      });
-                                      if (_isApproved == false &&
-                                          _isPending == false) {
-                                        _isApproved = true;
-                                        _isPending = true;
-                                      }
-                                    }),
+                                  value: _isApproved,
+                                  checkColor: Colors.green,
+                                  activeColor: Colors.white,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _isApproved = value as bool;
+                                    });
+                                    if (_isApproved == false &&
+                                        _isPending == false) {
+                                      _isApproved = true;
+                                      _isPending = true;
+                                    }
+                                  },
+                                ),
                                 Text(
                                   'Approved',
                                   style: TextStyle(

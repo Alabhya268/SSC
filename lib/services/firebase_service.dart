@@ -129,6 +129,7 @@ class FirebaseServices {
         .orderBy('name')
         .startAt([searchField])
         .endAt(['$searchField\uf8ff'])
+        .limit(1)
         .snapshots()
         .map(
           (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(
@@ -143,13 +144,16 @@ class FirebaseServices {
   }
 
   Stream<List<PartiesModel>> searchPartiesSales(
-      {required String searchField, required List<dynamic> products}) {
+      {required String searchField,
+      required List<dynamic> products,
+      DocumentSnapshot<Object?>? doc}) {
     PartiesModel _partiesModel;
     return partiesRef
         .where('product', whereIn: products)
         .orderBy('name')
         .startAt([searchField])
         .endAt(['$searchField\uf8ff'])
+        .limit(1)
         .snapshots()
         .map(
           (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(

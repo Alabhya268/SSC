@@ -22,10 +22,10 @@ class SignInPageSelector extends StatefulWidget {
 class _SignInPageSelectorState extends State<SignInPageSelector> {
   FirebaseServices _firebaseServices = FirebaseServices();
 
-  int screenNumberSignedIn = 0;
+  int _screenNumberSignedIn = 0;
 
-  Widget screenSignedIn(int screenNumberSignedIn) {
-    switch (screenNumberSignedIn) {
+  Widget screenSignedIn(int _screenNumberSignedIn) {
+    switch (_screenNumberSignedIn) {
       case 0:
         return PartiesScreen();
       case 1:
@@ -94,55 +94,78 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
                             ),
                           ),
                           ListTile(
-                            leading: Icon(Icons.group_outlined),
+                            leading: Icon(
+                              Icons.group_outlined,
+                              color: _screenNumberSignedIn == 0
+                                  ? kRegularColor
+                                  : kRegularIconColor,
+                            ),
                             title: Text('Parties'),
                             onTap: () {
                               setState(() {
-                                screenNumberSignedIn = 0;
+                                _screenNumberSignedIn = 0;
                               });
                               Navigator.pop(context);
                             },
                           ),
                           if (_userModel.role == 'Admin') ...[
                             ListTile(
-                              leading: Icon(Icons.people_alt_outlined),
+                              leading: Icon(
+                                Icons.people_alt_outlined,
+                                color: _screenNumberSignedIn == 1
+                                    ? kRegularColor
+                                    : kRegularIconColor,
+                              ),
                               title: Text('Members'),
                               onTap: () {
                                 setState(() {
-                                  screenNumberSignedIn = 1;
+                                  _screenNumberSignedIn = 1;
                                 });
                                 Navigator.pop(context);
                               },
                             ),
                             ListTile(
-                              leading: Icon(Icons.shopping_bag),
+                              leading: Icon(
+                                Icons.shopping_cart,
+                                color: _screenNumberSignedIn == 4
+                                    ? kRegularColor
+                                    : kRegularIconColor,
+                              ),
                               title: Text('Sales'),
                               onTap: () {
                                 setState(() {
-                                  screenNumberSignedIn = 4;
+                                  _screenNumberSignedIn = 4;
                                 });
                                 Navigator.pop(context);
                               },
                             ),
                             ListTile(
-                              leading: Icon(Icons.shopping_bag),
+                              leading: Icon(
+                                Icons.shopping_bag,
+                                color: _screenNumberSignedIn == 5
+                                    ? kRegularColor
+                                    : kRegularIconColor,
+                              ),
                               title: Text('Products'),
                               onTap: () {
                                 setState(() {
-                                  screenNumberSignedIn = 5;
+                                  _screenNumberSignedIn = 5;
                                 });
                                 Navigator.pop(context);
                               },
                             ),
                           ],
                           ListTile(
-                            leading: Icon(Icons.settings),
+                            leading: Icon(Icons.info),
                             title: Text('About'),
                             onTap: () {
                               showAboutDialog(
                                 context: context,
                                 applicationName: 'SSC',
-                                applicationIcon: FlutterLogo(),
+                                applicationIcon: Image.asset(
+                                  'assets/logos/launcher_icon.png',
+                                  height: 40,
+                                ),
                                 applicationVersion: '1.0.0',
                                 children: [
                                   Text('Developed by: Alabhya Singh'),
@@ -166,7 +189,7 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
           : null,
       body: _isUserVerified
           ? _isApproved == true
-              ? screenSignedIn(screenNumberSignedIn)
+              ? screenSignedIn(_screenNumberSignedIn)
               : _isApproved == false
                   ? screenSignedIn(3)
                   : Center(
