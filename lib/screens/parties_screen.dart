@@ -15,6 +15,7 @@ class PartiesScreen extends StatefulWidget {
 
 class _PartiesScreenState extends State<PartiesScreen> {
   late String _search;
+  bool _isSearching = false;
   TextEditingController _searchParty = TextEditingController();
 
   @override
@@ -71,6 +72,9 @@ class _PartiesScreenState extends State<PartiesScreen> {
                           onFieldSubmitted: (value) {
                             setState(() {
                               _search = value;
+                              if (value != '') {
+                                _isSearching = true;
+                              }
                             });
                           },
                           textInputAction: TextInputAction.next,
@@ -83,17 +87,20 @@ class _PartiesScreenState extends State<PartiesScreen> {
                           ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _search = _searchParty.text;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.search,
-                          color: kRegularIconColor,
-                        ),
-                      )
+                      if (_isSearching)
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _searchParty.text = '';
+                              _search = _searchParty.text;
+                              _isSearching = false;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.clear,
+                            color: kRegularIconColor,
+                          ),
+                        )
                     ],
                   ),
                 ),
