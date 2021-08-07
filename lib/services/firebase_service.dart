@@ -122,8 +122,7 @@ class FirebaseServices {
         );
   }
 
-  Stream<List<PartiesModel>> searchParties(
-      {required String searchField, DocumentSnapshot<Object?>? doc}) {
+  Stream<List<PartiesModel>> searchParties({required String searchField}) {
     PartiesModel _partiesModel;
     return partiesRef
         .orderBy('name')
@@ -143,10 +142,10 @@ class FirebaseServices {
         );
   }
 
-  Stream<List<PartiesModel>> searchPartiesSales(
-      {required String searchField,
-      required List<dynamic> products,
-      DocumentSnapshot<Object?>? doc}) {
+  Stream<List<PartiesModel>> searchPartiesSales({
+    required String searchField,
+    required List<dynamic> products,
+  }) {
     PartiesModel _partiesModel;
     return partiesRef
         .where('product', whereIn: products)

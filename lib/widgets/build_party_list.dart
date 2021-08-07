@@ -27,97 +27,93 @@ class BuildPartyList extends StatelessWidget {
         List<PartiesModel> _parties = [];
         _parties.addAll(Provider.of<List<PartiesModel>>(context));
         if (_parties.isNotEmpty)
-          return Column(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: _parties.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    decoration: kBoxDecorationStyle,
-                    child: ListTile(
-                      title: Text(
-                        '${_parties[index].name.capitalizeFirstofEach}',
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: _parties.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(bottom: 10.0),
+                decoration: kBoxDecorationStyle,
+                child: ListTile(
+                  title: Text(
+                    '${_parties[index].name.capitalizeFirstofEach}',
+                    style: kLabelStyle,
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${_parties[index].location.capitalizeFirstofEach}',
                         style: kLabelStyle,
                       ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${_parties[index].location.capitalizeFirstofEach}',
-                            style: kLabelStyle,
-                          ),
-                          Text(
-                            'Product: ${_parties[index].product}',
-                            style: kLabelStyle,
-                          ),
-                        ],
-                      ),
-                      trailing: Text(
-                        '${_miscFunctions.formattedDate(_parties[index].registrationDate)}',
+                      Text(
+                        'Product: ${_parties[index].product}',
                         style: kLabelStyle,
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PartyDetailScreen(
-                              partiesModel: _parties[index],
-                              userModel: _userModel,
+                    ],
+                  ),
+                  trailing: Text(
+                    '${_miscFunctions.formattedDate(_parties[index].registrationDate)}',
+                    style: kLabelStyle,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PartyDetailScreen(
+                          partiesModel: _parties[index],
+                          userModel: _userModel,
+                        ),
+                      ),
+                    );
+                  },
+                  onLongPress: () {
+                    if (_userModel.role == 'Admin') {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: kRegularColor,
+                            title: Text(
+                              'Alert Dialog',
+                              style: kLabelStyle,
                             ),
-                          ),
-                        );
-                      },
-                      onLongPress: () {
-                        if (_userModel.role == 'Admin') {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: kRegularColor,
-                                title: Text(
-                                  'Alert Dialog',
+                            content: Text(
+                              'Do you want to delete this party ?',
+                              style: kLabelStyle,
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  _firebaseServices.deleteFromParty(
+                                    id: _parties[index].id,
+                                  );
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'Yes',
                                   style: kLabelStyle,
                                 ),
-                                content: Text(
-                                  'Do you want to delete this party ?',
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text(
+                                  'No',
                                   style: kLabelStyle,
                                 ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      _firebaseServices.deleteFromParty(
-                                        id: _parties[index].id,
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'Yes',
-                                      style: kLabelStyle,
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text(
-                                      'No',
-                                      style: kLabelStyle,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
+                              ),
+                            ],
                           );
-                        }
-                      },
-                    ),
-                  );
-                },
-              ),
-            ],
+                        },
+                      );
+                    }
+                  },
+                ),
+              );
+            },
           );
         if (searchField != '' && _parties.isEmpty) {
           return Text(
