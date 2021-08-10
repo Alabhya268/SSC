@@ -7,7 +7,6 @@ import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// ignore: must_be_immutable
 class BuildPaymentList extends StatelessWidget {
   final FirebaseServices _firebaseServices = FirebaseServices();
   final MiscFunctions _miscFunctions = MiscFunctions();
@@ -17,7 +16,7 @@ class BuildPaymentList extends StatelessWidget {
   final bool isApproved;
   final bool isPending;
   final bool isBounced;
-  String paymentSearch;
+  final String paymentSearch;
 
   BuildPaymentList({
     Key? key,
@@ -29,13 +28,12 @@ class BuildPaymentList extends StatelessWidget {
     this.paymentSearch = '',
   }) : super(key: key);
 
-  List<PaymentModel> _payment = [];
-
   @override
   Widget build(BuildContext context) {
     String _approved = isApproved ? 'Approved' : '';
     String _pending = isPending ? 'Pending' : '';
     String _bounced = isBounced ? 'Bounced' : '';
+    List<PaymentModel> _payment = [];
 
     _payment = Provider.of<List<PaymentModel>>(context);
     _payment = _payment

@@ -122,13 +122,26 @@ class FirebaseServices {
         );
   }
 
-  Stream<List<PartiesModel>> searchParties({required String searchField}) {
+  Stream<List<PartiesModel>> searchParties({DocumentSnapshot<Object?>? doc}) {
+    PartiesModel _partiesModel;
+    return partiesRef.orderBy('name').snapshots().map(
+          (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(
+            (party) {
+              _partiesModel =
+                  PartiesModel.fromData(party.data() as Map<String, dynamic>);
+              _partiesModel.id = party.id;
+              return _partiesModel;
+            },
+          ).toList(),
+        );
+  }
+
+  Stream<List<PartiesModel>> searchPartiesSales(
+      {required List<dynamic> products}) {
     PartiesModel _partiesModel;
     return partiesRef
+        .where('product', whereIn: products)
         .orderBy('name')
-        .startAt([searchField])
-        .endAt(['$searchField\uf8ff'])
-        .limit(1)
         .snapshots()
         .map(
           (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(
@@ -142,28 +155,15 @@ class FirebaseServices {
         );
   }
 
-  Stream<List<PartiesModel>> searchPartiesSales({
-    required String searchField,
-    required List<dynamic> products,
-  }) {
-    PartiesModel _partiesModel;
-    return partiesRef
-        .where('product', whereIn: products)
-        .orderBy('name')
-        .startAt([searchField])
-        .endAt(['$searchField\uf8ff'])
+  Future<bool> doesPartyAlreadyExist(
+      {required String name, required String location}) async {
+    final QuerySnapshot result = await partiesRef
+        .where('name', isEqualTo: name)
+        .where('location', isEqualTo: location)
         .limit(1)
-        .snapshots()
-        .map(
-          (QuerySnapshot<Object?> querySnapshot) => querySnapshot.docs.map(
-            (party) {
-              _partiesModel =
-                  PartiesModel.fromData(party.data() as Map<String, dynamic>);
-              _partiesModel.id = party.id;
-              return _partiesModel;
-            },
-          ).toList(),
-        );
+        .get();
+    final List<DocumentSnapshot> document = result.docs;
+    return document.length == 1;
   }
 
   Stream<PaymentModel> getPaymentDetail({required String paymentId}) =>

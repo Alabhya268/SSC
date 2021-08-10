@@ -8,7 +8,6 @@ import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// ignore: must_be_immutable
 class BuildOrderList extends StatelessWidget {
   final MiscFunctions _miscFunctions = MiscFunctions();
 
@@ -25,13 +24,12 @@ class BuildOrderList extends StatelessWidget {
     required this.userModel,
   }) : super(key: key);
 
-  List<OrdersModel> _orders = [];
-
   @override
   Widget build(BuildContext context) {
     FirebaseServices _firebaseServices = FirebaseServices();
     String _approved = isApproved ? 'Approved' : '';
     String _pending = isPending ? 'Pending' : '';
+    List<OrdersModel> _orders = [];
 
     _orders = Provider.of<List<OrdersModel>>(context);
     return _orders.isNotEmpty

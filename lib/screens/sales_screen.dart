@@ -12,8 +12,7 @@ class SalesScreen extends StatefulWidget {
 
 class _SalesScreenState extends State<SalesScreen> {
   MiscFunctions _miscFunctions = MiscFunctions();
-  DateTime _startDate = DateTime(
-      DateTime.now().year, DateTime.now().month - 1, DateTime.now().day);
+  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month);
   DateTime _endDate = DateTime.now();
 
   @override

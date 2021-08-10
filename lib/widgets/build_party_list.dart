@@ -19,13 +19,13 @@ class BuildPartyList extends StatelessWidget {
     UserModel _userModel = Provider.of<UserModel>(context);
     return StreamProvider<List<PartiesModel>>.value(
       value: _userModel.role == 'Sales' || _userModel.role == ''
-          ? _firebaseServices.searchPartiesSales(
-              searchField: searchField, products: _userModel.products)
-          : _firebaseServices.searchParties(searchField: searchField),
+          ? _firebaseServices.searchPartiesSales(products: _userModel.products)
+          : _firebaseServices.searchParties(),
       initialData: [],
       builder: (context, snapshots) {
         List<PartiesModel> _parties = [];
-        _parties.addAll(Provider.of<List<PartiesModel>>(context));
+        _parties.addAll(Provider.of<List<PartiesModel>>(context)
+            .where((element) => element.name.startsWith(searchField)));
         if (_parties.isNotEmpty)
           return ListView.builder(
             shrinkWrap: true,

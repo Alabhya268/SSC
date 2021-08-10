@@ -159,7 +159,7 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                     'Add',
                     style: kLabelStyle,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_nameController.text.isEmpty ||
                         _locationController.text.isEmpty ||
                         _limitController.text.isEmpty) {
@@ -169,7 +169,21 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                           duration: Duration(seconds: 1),
                         ),
                       );
-                    } else
+                    } else if (await _firebaseServices.doesPartyAlreadyExist(
+                        name: _nameController.text.toLowerCase(),
+                        location: _locationController.text.toLowerCase())) {
+                      showDialog<void>(
+                        context: context,
+                        barrierDismissible: false, // user must tap button!
+                        builder: (BuildContext context) {
+                          return BuildErrorDialog(
+                            title: 'Alert',
+                            errorMessage:
+                                'Party with similar name and location exists already',
+                          );
+                        },
+                      );
+                    } else {
                       _firebaseServices
                           .addToParty(
                             partyLocation:
@@ -179,6 +193,7 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                             limit: double.parse(_limitController.text),
                           )
                           .whenComplete(() => Navigator.of(context).pop());
+                    }
                   }),
               TextButton(
                 child: Text(

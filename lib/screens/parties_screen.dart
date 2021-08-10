@@ -31,6 +31,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context);
     List<dynamic> _products = Provider.of<List<dynamic>>(context);
+    ValueNotifier<String> _searchParty = ValueNotifier<String>('');
 
     return GestureDetector(
       onTap: () {
@@ -71,7 +72,6 @@ class _PartiesScreenState extends State<PartiesScreen> {
                         Expanded(
                           child: TextFormField(
                             focusNode: _searchFocus,
-                            controller: _searchParty,
                             keyboardType: TextInputType.name,
                             style: TextStyle(
                               color: Colors.white,
@@ -83,16 +83,7 @@ class _PartiesScreenState extends State<PartiesScreen> {
                               });
                             },
                             onChanged: (value) {
-                              if (value == '') {
-                                setState(() {
-                                  _search = '';
-                                  _isSearching = false;
-                                });
-                              } else {
-                                setState(() {
-                                  _isSearching = true;
-                                });
-                              }
+                              _searchParty.value = value;
                             },
                             textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
@@ -104,20 +95,6 @@ class _PartiesScreenState extends State<PartiesScreen> {
                             ),
                           ),
                         ),
-                        if (_isSearching)
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _search = '';
-                                _searchParty.text = '';
-                                _isSearching = false;
-                              });
-                            },
-                            icon: Icon(
-                              Icons.clear,
-                              color: kRegularIconColor,
-                            ),
-                          )
                       ],
                     ),
                   ),
@@ -125,9 +102,16 @@ class _PartiesScreenState extends State<PartiesScreen> {
                     height: 30.0,
                   ),
                   Expanded(
-                      child: BuildPartyList(
-                    searchField: _search,
-                  )),
+                    child: ValueListenableBuilder(
+                      builder:
+                          (BuildContext context, String value, Widget? child) {
+                        return BuildPartyList(
+                          searchField: value,
+                        );
+                      },
+                      valueListenable: _searchParty,
+                    ),
+                  ),
                 ],
               ),
             ),

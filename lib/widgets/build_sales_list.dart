@@ -4,7 +4,6 @@ import 'package:cheque_app/utilities/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// ignore: must_be_immutable
 class BuildSalesList extends StatelessWidget {
   final FirebaseServices _firebaseServices = FirebaseServices();
   final DateTime startDate;
@@ -16,12 +15,11 @@ class BuildSalesList extends StatelessWidget {
     required this.endDate,
   }) : super(key: key);
 
-  late List<OrdersModel> _orders;
-  Map _sales = Map();
-  late List<Map> _salesList;
-
   @override
   Widget build(BuildContext context) {
+    late List<OrdersModel> _orders;
+    Map _sales = Map();
+    late List<Map> _salesList;
     return StreamProvider<List<OrdersModel>>.value(
       value: _firebaseServices.getOrdersInTimeRange(
           startDate: startDate, endDate: endDate),
