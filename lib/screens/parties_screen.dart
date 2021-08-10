@@ -14,16 +14,11 @@ class PartiesScreen extends StatefulWidget {
 }
 
 class _PartiesScreenState extends State<PartiesScreen> {
-  late String _search;
-  TextEditingController _searchParty = TextEditingController();
   FocusNode _searchFocus = FocusNode();
-  bool _isSearching = false;
 
   @override
   void initState() {
-    _search = _searchParty.text;
     _searchFocus.unfocus();
-    _isSearching = false;
     super.initState();
   }
 
@@ -77,11 +72,6 @@ class _PartiesScreenState extends State<PartiesScreen> {
                               color: Colors.white,
                               fontFamily: 'OpenSans',
                             ),
-                            onFieldSubmitted: (value) {
-                              setState(() {
-                                _search = value;
-                              });
-                            },
                             onChanged: (value) {
                               _searchParty.value = value;
                             },
