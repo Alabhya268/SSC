@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class OrdersModel {
   late String id;
+  String name;
   late String uid;
   late String partyId;
   late String product;
@@ -18,6 +20,7 @@ class OrdersModel {
 
   OrdersModel({
     this.id = '',
+    required this.name,
     required this.uid,
     required this.partyId,
     required this.product,
@@ -34,6 +37,7 @@ class OrdersModel {
 
   OrdersModel.fromData(Map<String, dynamic> data)
       : uid = data['uid'] ?? '',
+        name = data['name'] ?? '',
         partyId = data['partyId'] ?? '',
         product = data['product'] ?? '',
         perUnitAmount = data['perUnitAmount'].toDouble() ?? 1,
@@ -57,6 +61,7 @@ class OrdersModel {
   Map<String, dynamic> toJson() {
     return {
       'uid': uid,
+      'name': name,
       'partyId': partyId,
       'product': product,
       'perUnitAmount': perUnitAmount,

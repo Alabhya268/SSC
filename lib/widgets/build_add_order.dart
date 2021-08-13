@@ -380,6 +380,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
               } else {
                 _orderModel = OrdersModel(
                   partyId: widget.partiesModel.id,
+                  name: widget.partiesModel.name,
                   uid: _firebaseServices.getCurrentUserId(),
                   product: widget.partiesModel.product,
                   perUnitAmount: double.parse(_perUnitAmount.text),

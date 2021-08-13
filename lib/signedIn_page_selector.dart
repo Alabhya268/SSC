@@ -1,3 +1,4 @@
+import 'package:cheque_app/models/token_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/screens/products_screen.dart';
 import 'package:cheque_app/services/firebase_service.dart';
@@ -9,6 +10,7 @@ import 'screens/email_verification_screen.dart';
 import 'screens/parties_screen.dart';
 import 'screens/sales_screen.dart';
 import 'screens/user_approved_screen.dart';
+import 'services/messaging_service.dart';
 import 'utilities/constants.dart';
 import 'utilities/extension.dart';
 
@@ -21,8 +23,38 @@ class SignInPageSelector extends StatefulWidget {
 
 class _SignInPageSelectorState extends State<SignInPageSelector> {
   FirebaseServices _firebaseServices = FirebaseServices();
-
+  MessagingServices _messagingServices = MessagingServices();
   int _screenNumberSignedIn = 0;
+  String _token = '';
+
+  void _tokenWorkFlow(List<dynamic> products, String token) async {
+    _firebaseServices.doesTokenAlreadyExist(token: token).then((value) {
+      if (value) {
+        _firebaseServices.getTokenDetail(token: token).then((value) {
+          TokenModel _tokenModel = value;
+          if (value.products != products) {
+            _firebaseServices.updateTokenProduct(
+                product: products, id: _tokenModel.id);
+          }
+        });
+      } else {
+        TokenModel _tokenModel = TokenModel(token: token, products: products);
+        if (_tokenModel.token != '') {
+          _firebaseServices.addToToken(tokenModel: _tokenModel);
+        }
+      }
+    });
+  }
+
+  void _getToken() async {
+    _token = (await _messagingServices.getDeviceToken())!;
+  }
+
+  @override
+  void initState() {
+    _getToken();
+    super.initState();
+  }
 
   Widget screenSignedIn(int _screenNumberSignedIn) {
     switch (_screenNumberSignedIn) {
@@ -49,6 +81,10 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
     bool _isApproved = Provider.of<bool>(context);
     bool _isUserVerified = _user!.emailVerified;
     UserModel _userModel = Provider.of<UserModel>(context);
+
+    if (_isApproved && _isUserVerified) {
+      _tokenWorkFlow(_userModel.products, _token);
+    }
 
     return Scaffold(
       appBar: AppBar(

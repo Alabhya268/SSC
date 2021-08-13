@@ -105,6 +105,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           orderId: widget.orderModel.id),
                       initialData: OrdersModel(
                         id: widget.orderModel.id,
+                        name: widget.orderModel.name,
                         uid: widget.orderModel.uid,
                         partyId: widget.orderModel.partyId,
                         product: widget.orderModel.product,
@@ -142,7 +143,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${_partiesModel.name.capitalizeFirstofEach}',
+                          '${_orderModel.name.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',

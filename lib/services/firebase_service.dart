@@ -2,6 +2,7 @@ import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/product_list_model.dart';
+import 'package:cheque_app/models/token_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,8 +26,10 @@ class FirebaseServices {
       FirebaseFirestore.instance.collection("parties");
   final CollectionReference ordersRef =
       FirebaseFirestore.instance.collection("orders");
-  final CollectionReference productListRef =
+  final CollectionReference productsRef =
       FirebaseFirestore.instance.collection("products");
+  final CollectionReference tokensRef =
+      FirebaseFirestore.instance.collection("tokens");
 
   Future<int> getUserOrders(String uid) => usersRef.doc(uid).get().then((user) {
         return UserModel.fromData(user.data() as Map<String, dynamic>).orders;
@@ -166,6 +169,23 @@ class FirebaseServices {
     return document.length == 1;
   }
 
+  Future<bool> doesTokenAlreadyExist({required String token}) async {
+    final QuerySnapshot result =
+        await tokensRef.where('token', isEqualTo: token).limit(1).get();
+    final List<DocumentSnapshot> document = result.docs;
+    return document.length == 1;
+  }
+
+  Future<TokenModel> getTokenDetail({required String token}) async {
+    final QuerySnapshot result =
+        await tokensRef.where('token', isEqualTo: token).limit(1).get();
+    TokenModel _tokenModel;
+    _tokenModel =
+        TokenModel.fromData(result.docs.first.data() as Map<String, dynamic>);
+    _tokenModel.id = result.docs.first.id;
+    return _tokenModel;
+  }
+
   Stream<PaymentModel> getPaymentDetail({required String paymentId}) =>
       paymentsRef.doc(paymentId).snapshots().map((payment) {
         PaymentModel _paymentModel;
@@ -212,7 +232,7 @@ class FirebaseServices {
       });
 
   Stream<List<dynamic>> get getProducts =>
-      productListRef.snapshots().map((value) => value.docs
+      productsRef.snapshots().map((value) => value.docs
           .map((products) => ProductListModel.fromData(
               products.data() as Map<String, dynamic>))
           .first
@@ -238,7 +258,7 @@ class FirebaseServices {
       .map((DocumentSnapshot<Object?> document) => document['approved']);
 
   Future<String> getProductRefId() {
-    return productListRef.get().then((event) => event.docs.first.id);
+    return productsRef.get().then((event) => event.docs.first.id);
   }
 
   Future<void> updateUserOrders({
@@ -298,10 +318,23 @@ class FirebaseServices {
   }
 
   Future<void> updateProductList({required List<dynamic> product}) async {
-    await productListRef
-        .doc(await getProductRefId())
-        .set({'productList': product}).onError((error, stackTrace) => print(
+    String id = await getProductRefId().onError((error, stackTrace) {
+      return '';
+    });
+    id.length == 0
+        ? productsRef.add({'productList': product})
+        : await productsRef.doc(id).set({
+            'productList': product
+          }).onError((error, stackTrace) => print(
             'Error from firebase Service in method updateUserDetails: $error'));
+  }
+
+  Future<void> updateTokenProduct(
+      {required List<dynamic> product, required String id}) async {
+    tokensRef.doc(id).update({
+      'products': product
+    }).onError((error, stackTrace) => print(
+        ' Error from firebase Service in method updateTokenProduct: $error'));
   }
 
   Future<void> updateUserDetails({
@@ -350,6 +383,10 @@ class FirebaseServices {
 
   Future addToPayment({required PaymentModel paymentModel}) {
     return paymentsRef.add(paymentModel.toJson());
+  }
+
+  Future addToToken({required TokenModel tokenModel}) {
+    return tokensRef.add(tokenModel.toJson());
   }
 
   Future addToOrder({required OrdersModel orderModel}) {

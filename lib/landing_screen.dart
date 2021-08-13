@@ -22,12 +22,6 @@ class _LandingScreenState extends State<LandingScreen> {
     bool _signedIn = _user != null;
     late Stream<bool> userApproved;
 
-    if (_user == null) {
-      setState(() {
-        Provider.of<User?>(context);
-      });
-    }
-
     if (_signedIn) {
       userApproved = _firebaseServices.getUserApproved;
     }
