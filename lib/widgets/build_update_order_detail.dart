@@ -68,6 +68,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
               controller: _numberOfUnits,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.format_list_numbered,
               ),
@@ -81,6 +82,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
               controller: _perUnitAmount,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.money,
               ),
@@ -133,6 +135,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                 controller: _tax,
                 textInputType: TextInputType.number,
                 passwordfield: false,
+                noSpace: true,
                 icon: Icon(
                   Icons.money,
                 ),
@@ -147,6 +150,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
               controller: _extraCharges,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.money,
               ),

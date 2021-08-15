@@ -73,6 +73,7 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
               controller: _amountController,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.money,
               ),

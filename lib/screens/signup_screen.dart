@@ -436,6 +436,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       controller: _emailController,
                       textInputType: TextInputType.emailAddress,
                       passwordfield: false,
+                      noSpace: true,
                       icon: Icon(
                         Icons.email,
                       ),

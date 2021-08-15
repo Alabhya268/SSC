@@ -57,6 +57,7 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
               controller: _amountController,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.money,
               ),

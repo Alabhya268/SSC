@@ -296,6 +296,7 @@ class _BuildUpdateMemberDetailState extends State<BuildUpdateMemberDetail> {
               controller: _orderController,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.format_list_numbered,
                 color: kRegularIconColor,

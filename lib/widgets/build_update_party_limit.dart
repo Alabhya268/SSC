@@ -43,6 +43,7 @@ class _BuildPartyLimitState extends State<BuildPartyLimit> {
               controller: _limitController,
               textInputType: TextInputType.streetAddress,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.format_list_numbered,
               ),

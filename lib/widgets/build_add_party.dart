@@ -77,6 +77,7 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                     controller: _limitController,
                     textInputType: TextInputType.number,
                     passwordfield: false,
+                    noSpace: true,
                     icon: Icon(Icons.credit_card),
                   ),
                   SizedBox(

@@ -109,8 +109,8 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
       drawer: _isUserVerified
           ? _isApproved
               ? Drawer(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: ListView(
+                    shrinkWrap: true,
                     children: <Widget>[
                       Column(
                         children: [

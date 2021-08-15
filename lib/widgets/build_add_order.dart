@@ -59,6 +59,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
               controller: _numberOfUnits,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.format_list_numbered,
               ),
@@ -72,6 +73,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
               controller: _perUnitAmount,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.money,
               ),
@@ -85,6 +87,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
               controller: _extraCharges,
               textInputType: TextInputType.number,
               passwordfield: false,
+              noSpace: true,
               icon: Icon(
                 Icons.money,
               ),
@@ -137,6 +140,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
                 controller: _tax,
                 textInputType: TextInputType.number,
                 passwordfield: false,
+                noSpace: true,
                 icon: Icon(
                   Icons.money,
                 ),

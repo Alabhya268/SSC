@@ -11,6 +11,7 @@ class BuildInput extends StatelessWidget {
     required this.textInputType,
     required this.passwordfield,
     required this.icon,
+    this.noSpace = false,
   }) : super(key: key);
 
   final String fieldName;
@@ -19,6 +20,7 @@ class BuildInput extends StatelessWidget {
   final TextInputType textInputType;
   final bool passwordfield;
   final Icon icon;
+  final bool noSpace;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,10 @@ class BuildInput extends StatelessWidget {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextFormField(
+            inputFormatters: [
+              if (noSpace)
+                FilteringTextInputFormatter.deny(new RegExp(r"\s\b|\b\s"))
+            ],
             obscureText: passwordfield,
             controller: controller,
             keyboardType: textInputType,

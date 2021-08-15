@@ -229,6 +229,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       controller: _emailController,
                       textInputType: TextInputType.emailAddress,
                       passwordfield: false,
+                      noSpace: true,
                       icon: Icon(
                         Icons.email,
                       ),
