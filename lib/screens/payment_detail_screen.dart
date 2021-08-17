@@ -11,12 +11,12 @@ import 'package:cheque_app/utilities/extension.dart';
 
 class PaymentDetailScreen extends StatefulWidget {
   final String role;
-  final PartiesModel party;
+  final PartiesModel partiesModel;
   final PaymentModel paymentModel;
   const PaymentDetailScreen({
     Key? key,
     required this.paymentModel,
-    required this.party,
+    required this.partiesModel,
     required this.role,
   }) : super(key: key);
 
@@ -98,7 +98,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${widget.party.name.capitalizeFirstofEach}',
+                          '${widget.partiesModel.name.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -110,7 +110,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                           height: 10.0,
                         ),
                         Text(
-                          '${widget.party.location.capitalizeFirstofEach}',
+                          '${widget.partiesModel.location.capitalizeFirstofEach}',
                           style: TextStyle(
                             color: Colors.white,
                             fontFamily: 'OpenSans',
@@ -229,6 +229,7 @@ class _PaymentDetailScreenState extends State<PaymentDetailScreen> {
                                   barrierDismissible: false,
                                   builder: (BuildContext context) {
                                     return BuildUpdatePaymentDetail(
+                                      partiesModel: widget.partiesModel,
                                       role: widget.role,
                                       paymentModel: _paymentModel,
                                     );

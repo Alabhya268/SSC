@@ -1,5 +1,6 @@
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,9 @@ class BuildAddProduct extends StatelessWidget {
             style: kLabelStyle,
           ),
           onPressed: () async {
-            products.add(_productController.text);
+            products.add(
+              _productController.text.capitalizeFirstofEach,
+            );
             _firebaseServices
                 .updateProductList(product: products)
                 .whenComplete(() => Navigator.of(context).pop());

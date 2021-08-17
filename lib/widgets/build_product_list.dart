@@ -1,5 +1,6 @@
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:flutter/material.dart';
 
 class BuildProductList extends StatelessWidget {
@@ -20,7 +21,7 @@ class BuildProductList extends StatelessWidget {
                 decoration: kBoxDecorationStyle,
                 child: ListTile(
                   title: Text(
-                    products[index].toString(),
+                    products[index].toString().capitalizeFirstofEach,
                     style: kLabelStyle,
                     overflow: TextOverflow.fade,
                   ),

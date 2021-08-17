@@ -11,7 +11,7 @@ class BuildPaymentList extends StatelessWidget {
   final FirebaseServices _firebaseServices = FirebaseServices();
   final MiscFunctions _miscFunctions = MiscFunctions();
 
-  final PartiesModel party;
+  final PartiesModel partiesModel;
   final String role;
   final bool isApproved;
   final bool isPending;
@@ -24,7 +24,7 @@ class BuildPaymentList extends StatelessWidget {
     required this.isApproved,
     required this.isPending,
     required this.isBounced,
-    required this.party,
+    required this.partiesModel,
     this.paymentSearch = '',
   }) : super(key: key);
 
@@ -93,7 +93,7 @@ class BuildPaymentList extends StatelessWidget {
                           builder: (context) => PaymentDetailScreen(
                             role: role,
                             paymentModel: _payment[index],
-                            party: party,
+                            partiesModel: partiesModel,
                           ),
                         ),
                       );

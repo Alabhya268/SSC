@@ -179,7 +179,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_partiesModel.name}',
+                                  '${_partiesModel.name.capitalizeFirstofEach}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -191,7 +191,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 subtitle: Text(
-                                  '${_partiesModel.location}',
+                                  '${_partiesModel.location.capitalizeFirstofEach}',
                                   style: kTextStyleRegularSubtitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -241,8 +241,8 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                                             barrierDismissible: false,
                                             builder: (BuildContext context) {
                                               return BuildPartyLimit(
-                                                partyId: _partiesModel.id,
                                                 limit: _partiesModel.limit,
+                                                partiesModel: _partiesModel,
                                                 totalOutStanding:
                                                     _totalOutStanding,
                                               );
@@ -324,7 +324,7 @@ class _PartyDetailScreenState extends State<PartyDetailScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => PaymentsScreen(
-                                party: _partiesModel,
+                                partiesModel: _partiesModel,
                                 role: _userModel.role,
                               ),
                             ),

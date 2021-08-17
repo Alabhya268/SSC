@@ -224,7 +224,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         child: BuildOrderList(
                           isApproved: _isApproved,
                           isPending: _isPending,
-                          party: _partiesModel,
+                          partyModel: _partiesModel,
                           userModel: _userModel,
                         ),
                       ),

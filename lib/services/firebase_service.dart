@@ -1,3 +1,4 @@
+import 'package:cheque_app/models/notification_model.dart';
 import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
@@ -30,6 +31,8 @@ class FirebaseServices {
       FirebaseFirestore.instance.collection("products");
   final CollectionReference tokensRef =
       FirebaseFirestore.instance.collection("tokens");
+  final CollectionReference notificationsRef =
+      FirebaseFirestore.instance.collection("notifications");
 
   Future<int> getUserOrders(String uid) => usersRef.doc(uid).get().then((user) {
         return UserModel.fromData(user.data() as Map<String, dynamic>).orders;
@@ -363,22 +366,8 @@ class FirebaseServices {
         ' Error from firebase Service in method updatePartyLimit: $error'));
   }
 
-  Future<void> addToParty({
-    required String partyName,
-    required String partyLocation,
-    required String product,
-    required double limit,
-  }) async {
-    PartiesModel party = PartiesModel(
-        name: partyName,
-        location: partyLocation,
-        product: product,
-        limit: limit);
-    try {
-      partiesRef.add(party.toJson());
-    } catch (error) {
-      print(' Error from firebase Service in method addToParty: $error');
-    }
+  Future<void> addToParty({required PartiesModel partiesModel}) {
+    return partiesRef.add(partiesModel.toJson());
   }
 
   Future addToPayment({required PaymentModel paymentModel}) {
@@ -387,6 +376,10 @@ class FirebaseServices {
 
   Future addToToken({required TokenModel tokenModel}) {
     return tokensRef.add(tokenModel.toJson());
+  }
+
+  Future addToNotifications({required NotificationModel notificationModel}) {
+    return notificationsRef.add(notificationModel.toJson());
   }
 
   Future addToOrder({required OrdersModel orderModel}) {

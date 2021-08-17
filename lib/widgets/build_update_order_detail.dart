@@ -1,12 +1,18 @@
+import 'package:cheque_app/models/notification_model.dart';
 import 'package:cheque_app/models/orders_model.dart';
+import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 
+import 'build_error_dialog.dart';
+
 class BuildUpdateOrderDetail extends StatefulWidget {
+  final PartiesModel partiesModel;
   final double credit;
   final OrdersModel ordersModel;
   final UserModel userModel;
@@ -15,6 +21,7 @@ class BuildUpdateOrderDetail extends StatefulWidget {
     required this.ordersModel,
     required this.userModel,
     required this.credit,
+    required this.partiesModel,
   }) : super(key: key);
 
   @override
@@ -33,6 +40,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
   late DateTime _issueDate;
   late String _statusValue;
   late DateTime _statusDate;
+  late NotificationModel _notificationModel;
   double _totalOrderAmount = 0;
 
   @override
@@ -342,11 +350,15 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
               _extraCharges.text = '0';
             }
             if (_numberOfUnits.text.isEmpty || _perUnitAmount.text.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Number of units and Unit amount is required'),
-                  duration: Duration(seconds: 1),
-                ),
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return BuildErrorDialog(
+                    title: 'Alert',
+                    errorMessage: 'Number of units and Unit amount is required',
+                  );
+                },
               );
             } else {
               double _principle = double.parse(_perUnitAmount.text) *
@@ -360,33 +372,14 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                   double.parse(_extraCharges.text);
               if (_totalOrderAmount > widget.credit &&
                   _statusValue == _statusOptions[1]) {
-                showDialog(
+                showDialog<void>(
                   context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      backgroundColor: kRegularColor,
-                      title: Text(
-                        'Error',
-                        style: kLabelStyle,
-                      ),
-                      content: SingleChildScrollView(
-                        child: Text(
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return BuildErrorDialog(
+                      title: 'Alert',
+                      errorMessage:
                           'Total amount of order: $_totalOrderAmount \n Remaining credit: ${widget.credit}',
-                          style: kLabelStyle,
-                          overflow: TextOverflow.fade,
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'Ok',
-                            style: kLabelStyle,
-                          ),
-                        ),
-                      ],
                     );
                   },
                 );
@@ -404,24 +397,34 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                   status: _statusValue,
                   statusDate: _statusDate,
                 )
-                    .whenComplete(() async {
-                  widget.ordersModel.status == _statusOptions.first
-                      ? _statusValue == _statusOptions[1]
-                          ? await _firebaseServices.updateUserOrders(
-                              uid: widget.userModel.uid,
-                              orders: await _firebaseServices
-                                      .getUserOrders(widget.ordersModel.uid) +
-                                  1)
-                          // ignore: unnecessary_statements
-                          : null
-                      : _statusValue == _statusOptions.first
-                          ? await _firebaseServices.updateUserOrders(
-                              uid: widget.userModel.uid,
-                              orders: await _firebaseServices
-                                      .getUserOrders(widget.ordersModel.uid) -
-                                  1)
-                          // ignore: unnecessary_statements
-                          : null;
+                    .whenComplete(() {
+                  if (_statusValue != widget.ordersModel.status) {
+                    _notificationModel = NotificationModel(
+                        title: 'Order status updated',
+                        message:
+                            'Order status of ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been updated to $_statusValue',
+                        product: widget.partiesModel.product);
+                    _firebaseServices.addToNotifications(
+                        notificationModel: _notificationModel);
+                  }
+                }).whenComplete(() async {
+                  if (widget.ordersModel.status == _statusOptions.first) {
+                    if (_statusValue == _statusOptions[1]) {
+                      await _firebaseServices.updateUserOrders(
+                          uid: widget.userModel.uid,
+                          orders: await _firebaseServices
+                                  .getUserOrders(widget.ordersModel.uid) +
+                              1);
+                    }
+                  } else {
+                    if (_statusValue == _statusOptions.first) {
+                      await _firebaseServices.updateUserOrders(
+                          uid: widget.userModel.uid,
+                          orders: await _firebaseServices
+                                  .getUserOrders(widget.ordersModel.uid) -
+                              1);
+                    }
+                  }
                   Navigator.of(context).pop();
                 }).onError(
                   (error, stackTrace) => print(error),

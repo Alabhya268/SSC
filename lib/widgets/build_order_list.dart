@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 class BuildOrderList extends StatelessWidget {
   final MiscFunctions _miscFunctions = MiscFunctions();
 
-  final PartiesModel party;
+  final PartiesModel partyModel;
   final UserModel userModel;
   final bool isApproved;
   final bool isPending;
@@ -20,7 +20,7 @@ class BuildOrderList extends StatelessWidget {
     Key? key,
     required this.isApproved,
     required this.isPending,
-    required this.party,
+    required this.partyModel,
     required this.userModel,
   }) : super(key: key);
 
@@ -66,7 +66,7 @@ class BuildOrderList extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => OrderDetailScreen(
                               orderModel: _orders[index],
-                              party: party,
+                              partyModel: partyModel,
                               userModel: userModel),
                         ),
                       );

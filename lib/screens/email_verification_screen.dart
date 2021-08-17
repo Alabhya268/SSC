@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 import 'package:cheque_app/utilities/extension.dart';
 
 class PaymentsScreen extends StatefulWidget {
-  final PartiesModel party;
+  final PartiesModel partiesModel;
   final String role;
-  const PaymentsScreen({Key? key, required this.party, required this.role})
+  const PaymentsScreen(
+      {Key? key, required this.partiesModel, required this.role})
       : super(key: key);
 
   @override
@@ -61,7 +62,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               ),
               child: StreamProvider<List<PaymentModel>>.value(
                 value: _firebaseServices.getPartyPayments(
-                    partyId: widget.party.id),
+                    partyId: widget.partiesModel.id),
                 initialData: [],
                 catchError: (context, snapshot) {
                   return [];
@@ -84,7 +85,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                         height: 10.0,
                       ),
                       Text(
-                        '${widget.party.name.capitalizeFirstofEach}',
+                        '${widget.partiesModel.name.capitalizeFirstofEach}',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
@@ -224,7 +225,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                           builder: (BuildContext context, String value,
                               Widget? child) {
                             return BuildPaymentList(
-                              party: widget.party,
+                              partiesModel: widget.partiesModel,
                               role: widget.role,
                               isApproved: _isApproved,
                               isBounced: _isBounced,
@@ -253,7 +254,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     barrierDismissible: false,
                     builder: (BuildContext context) {
                       return BuildAddPayment(
-                        partiesModel: widget.party,
+                        partiesModel: widget.partiesModel,
                       );
                     },
                   );

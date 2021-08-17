@@ -1,17 +1,20 @@
+import 'package:cheque_app/models/notification_model.dart';
+import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 
 class BuildPartyLimit extends StatefulWidget {
-  final String partyId;
+  final PartiesModel partiesModel;
   final double limit;
   final double totalOutStanding;
   const BuildPartyLimit({
     Key? key,
-    required this.partyId,
     required this.limit,
     required this.totalOutStanding,
+    required this.partiesModel,
   }) : super(key: key);
 
   @override
@@ -22,6 +25,7 @@ class _BuildPartyLimitState extends State<BuildPartyLimit> {
   FirebaseServices _firebaseServices = FirebaseServices();
   TextEditingController _limitController = TextEditingController();
   bool _showError = false;
+  late NotificationModel _notificationModel;
 
   @override
   void initState() {
@@ -67,21 +71,38 @@ class _BuildPartyLimitState extends State<BuildPartyLimit> {
             style: kLabelStyle,
           ),
           onPressed: () async {
-            double.parse(_limitController.text) >= widget.totalOutStanding
-                ? await _firebaseServices
+            if (double.parse(_limitController.text) !=
+                widget.partiesModel.limit) {
+              if (double.parse(_limitController.text) >=
+                  widget.totalOutStanding) {
+                await _firebaseServices
                     .updatePartyLimit(
-                      partyId: widget.partyId,
+                      partyId: widget.partiesModel.id,
                       limit: double.parse(_limitController.text),
                     )
+                    .whenComplete(() {
+                      _notificationModel = NotificationModel(
+                          title: 'Party limit updated',
+                          message:
+                              'Limit of ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been updated to ${_limitController.text}',
+                          product: widget.partiesModel.product);
+                      _firebaseServices.addToNotifications(
+                          notificationModel: _notificationModel);
+                    })
                     .whenComplete(
                       () => Navigator.of(context).pop(),
                     )
                     .onError(
                       (error, stackTrace) => print(error),
-                    )
-                : setState(() {
-                    _showError = true;
-                  });
+                    );
+              } else {
+                setState(() {
+                  _showError = true;
+                });
+              }
+            } else {
+              Navigator.of(context).pop();
+            }
           },
         ),
         TextButton(

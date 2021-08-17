@@ -1,10 +1,14 @@
+import 'package:cheque_app/models/notification_model.dart';
 import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'build_error_dialog.dart';
 
 class BuildAddPayment extends StatefulWidget {
   final PartiesModel partiesModel;
@@ -29,6 +33,7 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
   TextEditingController _paymentNumberController = TextEditingController();
   TextEditingController _amountController = TextEditingController();
   late PaymentModel _paymentModel;
+  late NotificationModel _notificationModel;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -233,11 +238,15 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
             onPressed: () {
               if (_paymentNumberController.text.isEmpty ||
                   _amountController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('All fields are necessary'),
-                    duration: Duration(seconds: 1),
-                  ),
+                showDialog<void>(
+                  context: context,
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return BuildErrorDialog(
+                      title: 'Alert',
+                      errorMessage: 'All fields are necessary',
+                    );
+                  },
                 );
               } else {
                 _paymentModel = PaymentModel(
@@ -250,8 +259,16 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                   statusDate: _statusDate,
                   product: widget.partiesModel.product,
                 );
-                _firebaseServices.addToPayment(paymentModel: _paymentModel);
-                Navigator.of(context).pop();
+                _notificationModel = NotificationModel(
+                    title: 'Payment added',
+                    message:
+                        'A payment for ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been added',
+                    product: widget.partiesModel.product.capitalizeFirstofEach);
+                _firebaseServices
+                    .addToPayment(paymentModel: _paymentModel)
+                    .whenComplete(() => _firebaseServices.addToNotifications(
+                        notificationModel: _notificationModel))
+                    .whenComplete(() => Navigator.of(context).pop());
               }
             }),
         TextButton(

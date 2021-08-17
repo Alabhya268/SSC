@@ -1,17 +1,22 @@
+import 'package:cheque_app/models/notification_model.dart';
+import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/payment_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
 
 class BuildUpdatePaymentDetail extends StatefulWidget {
+  final PartiesModel partiesModel;
   final String role;
   final PaymentModel paymentModel;
   const BuildUpdatePaymentDetail({
     Key? key,
     required this.role,
     required this.paymentModel,
+    required this.partiesModel,
   }) : super(key: key);
 
   @override
@@ -298,6 +303,17 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                   statusDate: _statusDate,
                   isFreezed: _isFreezed,
                 )
+                .whenComplete(() {
+                  if (_statusValue != widget.paymentModel.status) {
+                    NotificationModel _notificationModel = NotificationModel(
+                        title: 'Payment status updated',
+                        message:
+                            'Payment status of ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been updated to $_statusValue',
+                        product: '');
+                    _firebaseServices.addToNotifications(
+                        notificationModel: _notificationModel);
+                  }
+                })
                 .whenComplete(
                   () => Navigator.of(context).pop(),
                 )

@@ -1,11 +1,15 @@
+import 'package:cheque_app/models/notification_model.dart';
 import 'package:cheque_app/models/orders_model.dart';
 import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/utilities/misc_functions.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:flutter/material.dart';
+
+import 'build_error_dialog.dart';
 
 class BuildAddOrder extends StatefulWidget {
   final double credit;
@@ -41,6 +45,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
   double _totalOrderAmount = 0;
 
   late OrdersModel _orderModel;
+  late NotificationModel _notificationModel;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -351,33 +356,14 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
                   double.parse(_extraCharges.text);
               if (_totalOrderAmount > widget.credit &&
                   _statusValue == _statusOptions[1]) {
-                showDialog(
+                showDialog<void>(
                   context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      backgroundColor: kRegularColor,
-                      title: Text(
-                        'Error',
-                        style: kLabelStyle,
-                      ),
-                      content: SingleChildScrollView(
-                        child: Text(
+                  barrierDismissible: false, // user must tap button!
+                  builder: (BuildContext context) {
+                    return BuildErrorDialog(
+                      title: 'Alert',
+                      errorMessage:
                           'Total amount of order: $_totalOrderAmount \n Remaining credit: ${widget.credit}',
-                          style: kLabelStyle,
-                          overflow: TextOverflow.fade,
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(
-                            'Ok',
-                            style: kLabelStyle,
-                          ),
-                        ),
-                      ],
                     );
                   },
                 );
@@ -397,8 +383,16 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
                   issueDate: _issueDate,
                   statusDate: _statusDate,
                 );
+                _notificationModel = NotificationModel(
+                  title: 'Order added',
+                  message:
+                      'An order for ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been added',
+                  product: widget.partiesModel.product,
+                );
                 _firebaseServices
                     .addToOrder(orderModel: _orderModel)
+                    .whenComplete(() => _firebaseServices.addToNotifications(
+                        notificationModel: _notificationModel))
                     .whenComplete(
                   () async {
                     if (_statusValue == _statusOptions[1]) {

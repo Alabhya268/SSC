@@ -13,12 +13,12 @@ import 'package:cheque_app/utilities/extension.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   final UserModel userModel;
-  final PartiesModel party;
+  final PartiesModel partyModel;
   final OrdersModel orderModel;
   const OrderDetailScreen({
     Key? key,
     required this.orderModel,
-    required this.party,
+    required this.partyModel,
     required this.userModel,
   }) : super(key: key);
 
@@ -32,7 +32,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    PartiesModel _partiesModel = widget.party;
+    PartiesModel _partiesModel = widget.partyModel;
     UserModel _userModel = widget.userModel;
     return Scaffold(
       appBar: AppBar(
@@ -327,6 +327,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                     credit: _credit,
                                     ordersModel: _orderModel,
                                     userModel: _userModel,
+                                    partiesModel: _partiesModel,
                                   );
                                 },
                               );

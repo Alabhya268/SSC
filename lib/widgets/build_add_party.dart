@@ -1,6 +1,9 @@
+import 'package:cheque_app/models/notification_model.dart';
+import 'package:cheque_app/models/parties_model.dart';
 import 'package:cheque_app/models/user_model.dart';
 import 'package:cheque_app/services/firebase_service.dart';
 import 'package:cheque_app/utilities/constants.dart';
+import 'package:cheque_app/utilities/extension.dart';
 import 'package:cheque_app/widgets/build_Input.dart';
 import 'package:cheque_app/widgets/build_error_dialog.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +24,8 @@ class _BuildAddPartyState extends State<BuildAddParty> {
   TextEditingController _locationController = TextEditingController();
   TextEditingController _limitController = TextEditingController();
   late String _selectedProduct;
+  late PartiesModel _partiesModel;
+  late NotificationModel _notificationModel;
 
   @override
   void initState() {
@@ -185,14 +190,25 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                         },
                       );
                     } else {
+                      _partiesModel = PartiesModel(
+                        name: _nameController.text.toLowerCase(),
+                        location: _locationController.text.toLowerCase(),
+                        limit: double.parse(_limitController.text),
+                        product: _selectedProduct,
+                      );
+                      _notificationModel = NotificationModel(
+                        title: 'Party added',
+                        message:
+                            'A party ${_nameController.text.capitalizeFirstofEach} from ${_locationController.text.capitalizeFirstofEach} with product $_selectedProduct has been added',
+                        product: _selectedProduct,
+                      );
                       _firebaseServices
                           .addToParty(
-                            partyLocation:
-                                _locationController.text.toLowerCase(),
-                            partyName: _nameController.text.toLowerCase(),
-                            product: _selectedProduct,
-                            limit: double.parse(_limitController.text),
+                            partiesModel: _partiesModel,
                           )
+                          .whenComplete(() =>
+                              _firebaseServices.addToNotifications(
+                                  notificationModel: _notificationModel))
                           .whenComplete(() => Navigator.of(context).pop());
                     }
                   }),
