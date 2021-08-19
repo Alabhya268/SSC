@@ -86,7 +86,7 @@ class _BuildPartyLimitState extends State<BuildPartyLimit> {
                           message:
                               'Limit of ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been updated to ${_limitController.text}',
                           product: widget.partiesModel.product);
-                      _firebaseServices.addToNotifications(
+                      _firebaseServices.addToNotification(
                           notificationModel: _notificationModel);
                     })
                     .whenComplete(

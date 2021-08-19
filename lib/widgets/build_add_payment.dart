@@ -266,7 +266,7 @@ class _BuildAddPaymentState extends State<BuildAddPayment> {
                     product: widget.partiesModel.product.capitalizeFirstofEach);
                 _firebaseServices
                     .addToPayment(paymentModel: _paymentModel)
-                    .whenComplete(() => _firebaseServices.addToNotifications(
+                    .whenComplete(() => _firebaseServices.addToNotification(
                         notificationModel: _notificationModel))
                     .whenComplete(() => Navigator.of(context).pop());
               }

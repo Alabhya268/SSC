@@ -215,7 +215,9 @@ class _SignInPageSelectorState extends State<SignInPageSelector> {
                         leading: Icon(Icons.logout_outlined),
                         title: Text('Signout'),
                         onTap: () {
-                          _firebaseServices.firebaseAuth.signOut();
+                          _firebaseServices.firebaseAuth.signOut().whenComplete(
+                              () => _firebaseServices.deleteFromToken(
+                                  id: _token));
                         },
                       ),
                     ],

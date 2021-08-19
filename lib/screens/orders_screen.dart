@@ -65,8 +65,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             },
           ),
           StreamProvider<List<OrdersModel>>.value(
-            value: _firebaseServices.getApprovedPartyOrders(
-                partyId: _partiesModel.id),
+            value: _firebaseServices.getPartyOrders(partyId: _partiesModel.id),
             initialData: [],
           ),
           StreamProvider<PartiesModel>.value(
@@ -92,7 +91,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
         builder: (context, widget) {
           PartiesModel _partiesModel = Provider.of<PartiesModel>(context);
           List<OrdersModel> _approvedOrderList =
-              Provider.of<List<OrdersModel>>(context);
+              Provider.of<List<OrdersModel>>(context)
+                  .where((element) => element.status == 'Approved')
+                  .toList();
           List<PaymentModel> _approvedPaymentList =
               Provider.of<List<PaymentModel>>(context);
           double _totalPayment = 0;

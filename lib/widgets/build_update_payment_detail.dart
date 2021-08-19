@@ -310,7 +310,7 @@ class _BuildUpdatePaymentDetailState extends State<BuildUpdatePaymentDetail> {
                         message:
                             'Payment status of ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been updated to $_statusValue',
                         product: '');
-                    _firebaseServices.addToNotifications(
+                    _firebaseServices.addToNotification(
                         notificationModel: _notificationModel);
                   }
                 })

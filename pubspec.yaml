@@ -1,8 +1,7 @@
 name: cheque_app
 description: A new Flutter project.
 
-
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -28,14 +27,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
 flutter_icons:
   android: true
   ios: true
   image_path: "assets/logos/launcher_icon.png"
   image_path_android: "assets/logos/android/launcher_icon.png"
   image_path_ios: "assets/logos/android/launcher_icon.png"
-
 
 flutter:
   uses-material-design: true

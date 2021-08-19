@@ -207,7 +207,7 @@ class _BuildAddPartyState extends State<BuildAddParty> {
                             partiesModel: _partiesModel,
                           )
                           .whenComplete(() =>
-                              _firebaseServices.addToNotifications(
+                              _firebaseServices.addToNotification(
                                   notificationModel: _notificationModel))
                           .whenComplete(() => Navigator.of(context).pop());
                     }

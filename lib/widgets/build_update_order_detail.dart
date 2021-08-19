@@ -404,7 +404,7 @@ class _BuildUpdateOrderDetailState extends State<BuildUpdateOrderDetail> {
                         message:
                             'Order status of ${widget.partiesModel.name.capitalizeFirstofEach} from ${widget.partiesModel.location.capitalizeFirstofEach} has been updated to $_statusValue',
                         product: widget.partiesModel.product);
-                    _firebaseServices.addToNotifications(
+                    _firebaseServices.addToNotification(
                         notificationModel: _notificationModel);
                   }
                 }).whenComplete(() async {

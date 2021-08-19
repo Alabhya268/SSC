@@ -391,7 +391,7 @@ class _BuildAddOrderState extends State<BuildAddOrder> {
                 );
                 _firebaseServices
                     .addToOrder(orderModel: _orderModel)
-                    .whenComplete(() => _firebaseServices.addToNotifications(
+                    .whenComplete(() => _firebaseServices.addToNotification(
                         notificationModel: _notificationModel))
                     .whenComplete(
                   () async {

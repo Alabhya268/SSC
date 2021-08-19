@@ -375,15 +375,20 @@ class FirebaseServices {
   }
 
   Future addToToken({required TokenModel tokenModel}) {
-    return tokensRef.add(tokenModel.toJson());
+    return tokensRef.doc(tokenModel.token).set(tokenModel.toJson());
   }
 
-  Future addToNotifications({required NotificationModel notificationModel}) {
+  Future addToNotification({required NotificationModel notificationModel}) {
     return notificationsRef.add(notificationModel.toJson());
   }
 
   Future addToOrder({required OrdersModel orderModel}) {
     return ordersRef.add(orderModel.toJson());
+  }
+
+  Future<void> deleteFromToken({required String id}) async {
+    tokensRef.doc(id).delete().onError((error, stackTrace) => print(
+        ' Error from firebase Service in method deleteFromToken: $error'));
   }
 
   Future<void> deleteFromParty({required String id}) async {
