@@ -44,8 +44,8 @@ SSC app is made for an organisation to easily keep track of all orders and payme
 
 ![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/mobile1.png?raw=true)
 ![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/mobile2.png?raw=true)
-![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web1.png.png?raw=true)
-![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web2.png.png?raw=true)
+![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web1.png?raw=true)
+![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web1.png?raw=true)
 
 ## Installation instructions
 
