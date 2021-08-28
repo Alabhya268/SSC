@@ -40,13 +40,6 @@ SSC app is made for an organisation to easily keep track of all orders and payme
 - ### **Products section**
   - Products section is visible only to admin. In this section admin can add and delete the products.
 
-## Images
-
-![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/mobile1.png?raw=true)
-![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/mobile2.png?raw=true)
-![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web1.png?raw=true)
-![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web1.png?raw=true)
-
 ## Installation instructions
 
 - Installing SSC app is really simple. Just download the sample apk from [here]() and install it on your android device.
@@ -84,3 +77,10 @@ SSC app is made for an organisation to easily keep track of all orders and payme
 
 - Note
   - Android studio, android sdk and android emulator is required to be install prior to these steps.
+
+## Images
+
+![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/mobile1.png?raw=true)
+![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/mobile2.png?raw=true)
+![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web1.png?raw=true)
+![Markdown Logo](https://github.com/Alabhya268/SSC/blob/master/assets/screenshots/web2.png?raw=true)
