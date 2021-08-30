@@ -49,15 +49,19 @@ SSC app is made for an organisation to easily keep track of all orders and payme
 
 ## Installation instructions
 
-- Installing SSC app is really simple. Just download the sample apk from [here]() and install it on your android device.
+- Installing SSC app is really simple. Just download the sample apk from [here](https://stmarysstclairorg-my.sharepoint.com/:u:/g/personal/hh2992_office-365_works/ES745LftNmZKhxjuxk3R5oMBjwGGrqIJYYHcGLceo-kuiA?e=X6BtND) and install it on your android device.
 - To use the web version visit [here](https://ssq-chq.firebaseapp.com/#/).
+
+```bash
+  flutter clean
+```
 
 ## To build and Run on your local machine
 
 1. Install and setup flutter on your local device from [here](https://flutter.dev/docs/get-started/install).
 2. Once flutter is installed, Clone this repo.
 3. Run android emulator from android studio.
-4. Open terminal in directory of this cloned repo.
+4. Open terminal in directory where you have cloned repo.
 5. Run the following commands:
 
 ```bash
@@ -72,7 +76,7 @@ SSC app is made for an organisation to easily keep track of all orders and payme
   flutter run lib/main.dart
 ```
 
-6. Congrats, you have sucessfully compiled and ran this project on your android emulator. If you want to compile and run web version, run following commands.
+6. Thats it, you have sucessfully compiled and ran this project on your android emulator. If you want to compile and run web version, run following commands.
 
 ```bash
    flutter config --enable-web
@@ -84,3 +88,9 @@ SSC app is made for an organisation to easily keep track of all orders and payme
 
 - Note
   - Android studio, android sdk and android emulator is required to be install prior to these steps.
+
+7. Three users will be created by default which are listed below -
+
+- ADMIN USER- email: admin@test.com password: password
+- ACCOUNTANT USER- email: accountant@test.com password: password
+- SALES USER- email: sales@test.com password: password

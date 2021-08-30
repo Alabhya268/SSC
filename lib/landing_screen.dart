@@ -45,6 +45,7 @@ class _LandingScreenState extends State<LandingScreen> {
               StreamProvider<bool>.value(
                 value: userApproved,
                 initialData: true,
+                lazy: false,
               ),
             ],
             child: SignInPageSelector(),
